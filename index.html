@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TitanGain OS | Workstation Elite (Light)</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              light: '#f8fafc',
+              card: '#ffffff',
+              border: '#e2e8f0',
+              accent: '#059669', 
+            }
+          },
+          boxShadow: {
+            'neon': '0 4px 20px rgba(16, 185, 129, 0.2)',
+            'neon-strong': '0 8px 30px rgba(16, 185, 129, 0.4)',
+            'neon-purple': '0 4px 20px rgba(192, 38, 211, 0.2)',
+            'neon-blue': '0 4px 20px rgba(56, 189, 248, 0.2)',
+            'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { --scrollbar-bg: #f1f5f9; --scrollbar-thumb: #cbd5e1; --accent: #059669; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--brand-light, #f8fafc);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(16, 185, 129, 0.05), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(192, 38, 211, 0.05), transparent 25%);
+      color: #0f172a; 
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: var(--tw-shadow-soft);
+    }
+
+    .btn-tactical { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+    .btn-tactical:active { transform: scale(0.96); }
+    
+    @keyframes sweep { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); border-color: rgba(16,185,129,0.8); }
+      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); border-color: rgba(16,185,129,0.4); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); border-color: rgba(226, 232, 240, 1); }
+    }
+    
+    .status-live {
+      animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+      background: linear-gradient(180deg, rgba(16,185,129,0.05) 0%, rgba(255,255,255,1) 100%);
+    }
+
+    .task-verified {
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+      border-left: 3px solid #059669 !important;
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .tab-active {
+      background: #10b981 !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      box-shadow: var(--tw-shadow-neon);
+      border-color: #10b981 !important;
+    }
+
+    .check-custom {
+      appearance: none; width: 1.25rem; height: 1.25rem;
+      border: 2px solid #cbd5e1; border-radius: 0.25rem; background-color: #ffffff; cursor: pointer; position: relative; transition: all 0.2s;
+    }
+    .check-custom:checked { background-color: #10b981; border-color: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.2); }
+    .check-custom:checked::after {
+      content: '✓'; position: absolute; color: #ffffff; font-weight: 900; font-size: 0.8rem;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+
+    .scrollbar-none::-webkit-scrollbar { display: none; }
+    .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+    .mask-linear { mask-image: linear-gradient(to right, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%); }
+
+    .ex-card-active {
+      border-color: #10b981 !important;
+      background-color: #ecfdf5 !important;
+      box-shadow: var(--tw-shadow-neon);
+    }
+    
+    .notif-unread {
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+      border-left: 3px solid #38bdf8;
+    }
+    .notif-penalty {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%);
+      border-left: 3px solid #ef4444;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col selection:bg-emerald-200 selection:text-emerald-900">
+
+  <header class="border-b border-slate-200 bg-white/90 sticky top-0 z-40 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center font-black text-white text-xl shadow-neon border border-emerald-300/50">
+          OS
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-black text-slate-900 tracking-tight text-lg leading-none">Titan<span class="text-emerald-600">Gain</span></h1>
+            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-red-100 text-red-600 border border-red-200 font-bold uppercase tracking-widest hidden sm:inline-block">Extremo (110KG)</span>
+          </div>
+          <p class="text-[10px] text-slate-500 font-mono mt-1 uppercase tracking-wider">Ian Ítalo • 1.73m • Bulking Agressivo</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 sm:space-x-3 overflow-x-auto scrollbar-none py-2 mask-linear">
+        <button onclick="toggleGroceryModal()" class="btn-tactical whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold flex items-center space-x-2">
+          <span class="text-sm">🛒</span> <span class="hidden sm:inline">Estoque</span>
+        </button>
+        <button onclick="toggleMemorialModal()" class="btn-tactical whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 text-xs font-bold flex items-center space-x-2">
+          <span class="text-sm">🏆</span> <span class="hidden sm:inline">Memorial</span>
+        </button>
+        <button onclick="toggleClinicModal()" class="btn-tactical whitespace-nowrap px-3 sm:px-4 py-1.5 rounded-lg bg-fuchsia-50 hover:bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200 text-xs font-bold flex items-center space-x-2 shadow-neon-purple">
+          <span class="text-sm">🏥</span> <span class="hidden sm:inline">Evolução</span>
+        </button>
+        <button onclick="toggleNotificationsModal()" class="btn-tactical relative whitespace-nowrap px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 text-xs font-bold flex items-center shadow-soft">
+          <span class="text-sm">🔔</span>
+          <span id="notifBadgeCount" class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-white hidden animate-pulse">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div class="glass-panel p-4 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 border-l-4 border-l-fuchsia-500 relative overflow-hidden">
+      <div class="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-fuchsia-50 to-transparent pointer-events-none"></div>
+      
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-8 h-8 rounded-full bg-fuchsia-100 flex items-center justify-center border border-fuchsia-200 text-fuchsia-600 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+        </div>
+        <div>
+          <span class="text-[9px] font-mono font-black text-fuchsia-500 uppercase tracking-widest block">Objetivo Global (3 Meses)</span>
+          <span class="text-sm font-black text-slate-900">Projeto 110 KG</span>
+        </div>
+      </div>
+      
+      <div class="flex-1 flex items-center gap-4 w-full">
+        <span class="text-xs font-mono text-slate-500 font-bold shrink-0">52kg</span>
+        <div class="flex-1 h-3 bg-slate-200 rounded-full overflow-hidden border border-slate-300 shadow-inner relative">
+          <div id="globalProgressBar" class="h-full bg-gradient-to-r from-emerald-500 via-cyan-500 to-fuchsia-500 w-[0%] transition-all duration-1000 relative">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIuMiIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTAgNDBsNDAtNDBNMCBtbTAlMjBtMjAlMjBNLTIwIDQwbDQwLTQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+          </div>
+        </div>
+        <span class="text-xs font-mono text-fuchsia-600 font-black shrink-0">110kg</span>
+      </div>
+      
+      <div class="shrink-0 text-right">
+        <span class="text-[10px] text-slate-500 font-mono uppercase block">Peso Validado</span>
+        <span id="globalProgressText" class="text-base font-mono font-black text-slate-900">52.0 KG</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 space-y-6">
+    
+    <div class="glass-panel p-4 rounded-xl border border-emerald-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-emerald-50/50">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-white border border-emerald-300 flex items-center justify-center text-xl animate-pulse shadow-neon shrink-0">🎯</div>
+        <div>
+          <div class="flex items-center space-x-3 flex-wrap gap-y-2">
+            <h2 id="currentPhaseTitle" class="font-black text-slate-900 text-sm md:text-base uppercase tracking-tight">Analisando Biometria...</h2>
+            <span id="currentSystemClock" class="text-[11px] font-mono bg-white text-emerald-600 px-2.5 py-0.5 rounded border border-emerald-200 font-bold shadow-sm">--:--:--</span>
+          </div>
+          <p id="currentPhaseTip" class="text-xs text-slate-600 mt-1 font-medium">Aguardando sincronização de relógio da Workstation...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none" id="dayTabsContainer"></div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <div class="lg:col-span-7 space-y-4">
+        <div class="glass-panel rounded-2xl p-5 border-t-4 border-t-slate-200">
+          <div class="flex flex-col sm:flex-row justify-between gap-4">
+            <div>
+              <span id="dayBadge" class="text-[10px] font-mono font-black uppercase tracking-widest text-emerald-600 mb-1 block">Carregando</span>
+              <h3 id="dayTitle" class="text-xl font-black text-slate-900 tracking-tight">...</h3>
+            </div>
+            <div class="text-left sm:text-right bg-slate-50 p-2.5 rounded-lg border border-slate-200 shrink-0">
+              <span class="text-[9px] font-mono text-slate-500 uppercase block mb-1">Status de Auditoria</span>
+              <span id="dailyProgressText" class="text-sm font-black text-emerald-600">0/0 Provas</span>
+            </div>
+          </div>
+          
+          <div class="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 flex gap-3 items-start">
+            <span class="text-lg">🗣️</span>
+            <div>
+              <strong class="text-[10px] text-slate-500 font-black uppercase tracking-widest block mb-1">Diretriz do Nutricionista:</strong>
+              <p id="dayDevTip" class="text-xs text-slate-700 leading-relaxed font-medium">...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3" id="timelineContainer"></div>
+      </div>
+
+      <div class="lg:col-span-5 space-y-4">
+        <div class="glass-panel rounded-2xl p-5 sticky top-24 flex flex-col gap-4 shadow-lg border border-slate-200">
+          
+          <div id="liveWorkoutBadge" class="hidden bg-red-50 text-red-700 px-3 py-2.5 rounded-xl border-2 border-red-200 shadow-[0_0_15px_rgba(239,68,68,0.2)] font-mono text-[10px] font-black uppercase tracking-widest flex items-center justify-between mb-1 transition-all duration-300">
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span> BLOCO AO VIVO</span>
+            <div class="flex items-center gap-2">
+              <span>TEMPO RESTANTE:</span>
+              <span id="liveExerciseTimer" class="text-sm font-black text-red-600 bg-red-100 px-2 py-0.5 rounded border border-red-300">00:00</span>
+            </div>
+          </div>
+
+          <!-- HUD Header -->
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-neon"></span>
+                <span class="text-[9px] font-mono text-emerald-600 uppercase font-bold tracking-widest">Holo-Engine HUD Tático</span>
+              </div>
+              <h4 id="simExerciseName" class="text-lg font-black text-slate-900 uppercase tracking-tight leading-none mt-1">Carregando...</h4>
+              <div class="flex gap-2 mt-2">
+                <span id="simSetsReps" class="text-[10px] font-black font-mono px-2.5 py-1 rounded bg-emerald-100 text-emerald-700 border border-emerald-300 shadow-sm uppercase tracking-wider">0x 0 REPS</span>
+                <span id="simMuscleBadge" class="text-[10px] font-black font-mono px-2.5 py-1 rounded bg-slate-100 text-cyan-700 border border-slate-300 uppercase tracking-wider">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas Container -->
+          <div class="relative rounded-xl overflow-hidden bg-[#f8fafc] border-2 border-slate-200 min-h-[280px] group">
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:25px_25px] pointer-events-none opacity-80"></div>
+            
+            <canvas id="exerciseCanvas" width="480" height="280" class="w-full h-auto block relative z-10"></canvas>
+            
+            <div class="absolute top-3 left-3 bg-white/90 border border-slate-200 px-2 py-1 rounded text-[9px] font-mono text-slate-500 font-bold z-20 shadow-sm uppercase tracking-wider">
+              FASE: <span id="simPhaseLabel" class="text-emerald-600 font-black">...</span>
+            </div>
+            <div class="absolute top-3 right-3 bg-white/90 border border-slate-200 px-2 py-1 rounded text-[9px] font-mono text-slate-500 font-bold z-20 shadow-sm uppercase tracking-wider">
+              REPS: <span id="simRepCounter" class="text-cyan-600 font-black text-sm leading-none">0</span>
+            </div>
+          </div>
+
+          <!-- Technical Focus Box -->
+          <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 shadow-sm">
+            <h5 class="text-[9px] font-black text-blue-700 uppercase tracking-widest mb-2 flex items-center gap-1"><span>🎯</span> Pontos de Foco (Biomecânica)</h5>
+            <ul id="simFormTips" class="text-xs text-blue-900 font-medium space-y-1 pl-4 list-disc marker:text-blue-500">
+              <!-- JS Injected -->
+            </ul>
+          </div>
+
+          <!-- Interactive Exercise Playlist -->
+          <div class="pt-2">
+            <h5 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 border-b border-slate-200 pb-1 flex justify-between">
+              <span>📋 Fila de Treino (Hoje)</span>
+              <span class="text-emerald-500 animate-pulse">CLIQUE PARA ALTERAR</span>
+            </h5>
+            <div id="exerciseListContainer" class="space-y-2 max-h-[180px] overflow-y-auto scrollbar-none pr-1">
+              <!-- Cards Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Rest Timer -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 mt-2">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-mono text-slate-500 font-bold uppercase tracking-wider flex items-center gap-2">
+                <span>⏱️</span><span>Descanso Entre Séries</span>
+              </span>
+              <span id="restTimerDisplay" class="text-2xl font-mono font-black text-cyan-600 tracking-wider">01:00</span>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+              <button class="rest-preset-btn btn-tactical py-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-[10px] font-black font-mono text-slate-600 transition uppercase shadow-sm" data-seconds="45">45s</button>
+              <button class="rest-preset-btn btn-tactical py-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-[10px] font-black font-mono text-slate-600 transition uppercase shadow-sm" data-seconds="60">60s</button>
+              <button class="rest-preset-btn btn-tactical py-2.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-300 text-[10px] font-black font-mono text-slate-600 transition uppercase shadow-sm" data-seconds="90">90s</button>
+              <button id="startRestBtn" class="btn-tactical py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-600 text-white font-black text-[10px] uppercase tracking-widest transition shadow-[0_4px_15px_rgba(6,182,212,0.4)]">INICIAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="recipeModal" class="fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm hidden flex-col opacity-0 transition-opacity duration-300">
+    <div class="h-16 border-b border-blue-200 bg-white flex items-center justify-between px-4 sm:px-8 shrink-0 shadow-sm">
+      <h3 class="text-sm font-black text-blue-600 uppercase tracking-widest flex items-center gap-2">
+        <span>📖</span> <span>Protocolo Nutricional</span>
+      </h3>
+      <button onclick="closeRecipeModal()" class="text-slate-500 hover:text-slate-900 transition-colors text-xs font-black tracking-wider uppercase">FECHAR ✕</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 sm:p-8 scrollbar-none bg-slate-50">
+      <div class="max-w-2xl mx-auto space-y-6 pb-10">
+        <div class="text-center mb-8">
+          <div class="text-4xl mb-3" id="recipeIcon">🥗</div>
+          <h2 class="text-xl font-black text-slate-900 uppercase" id="recipeTitle">Título</h2>
+          <p class="text-xs text-slate-500 font-mono mt-2" id="recipeDesc">Descrição...</p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h4 class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">📋 Ingredientes Base (Bulking)</h4>
+          <ul id="recipeIngredients" class="space-y-3"></ul>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h4 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2">⚙️ Modo de Preparo e Consumo</h4>
+          <p id="recipePrep" class="text-sm text-slate-700 leading-relaxed font-medium whitespace-pre-line"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="groceryModal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex-col opacity-0 transition-opacity duration-300">
+    <div class="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-4 sm:px-8 shrink-0 shadow-sm">
+      <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+        <span>🛒</span> <span>Logística de Suprimentos (Bulking)</span>
+      </h3>
+      <button onclick="toggleGroceryModal()" class="text-slate-500 hover:text-slate-900 transition-colors text-xs font-black tracking-wider uppercase">FECHAR ✕</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 sm:p-8 scrollbar-none bg-slate-50">
+      <div class="max-w-4xl mx-auto space-y-8 pb-10">
+        <div class="p-4 rounded-xl bg-white border border-slate-200 flex flex-col gap-4 shadow-sm">
+          <div class="flex items-start gap-4">
+            <span class="text-2xl">⚠️</span>
+            <div>
+              <p class="text-xs text-slate-700 font-medium leading-relaxed">
+                Sem comida no armário, você vai pular refeições e perder peso. Esta é a sua lista tática baseada nas receitas da semana. 
+                <strong>Marque o que já está na despensa.</strong>
+              </p>
+            </div>
+          </div>
+          <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between mt-2 gap-2">
+            <span class="text-[10px] font-mono text-blue-700 font-bold uppercase tracking-widest flex items-center gap-2"><span class="animate-pulse">⏱️</span> Alvo de Abastecimento (Reposição Mínima):</span>
+            <span class="text-xs font-black text-slate-900 uppercase">Domingos (09:00)</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="groceryContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="clinicModal" class="fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="glass-panel bg-white w-full max-w-xl rounded-2xl border border-fuchsia-200 overflow-hidden shadow-neon-purple transform scale-95 transition-transform duration-300" id="clinicCard">
+      <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+        <h3 class="text-sm font-black text-fuchsia-600 uppercase tracking-widest flex items-center gap-2">
+          <span>🏥</span> <span>Centro Clínico Prime</span>
+        </h3>
+        <button onclick="toggleClinicModal()" class="text-slate-500 hover:text-slate-900 transition-colors font-black text-xs">✕</button>
+      </div>
+      <div class="p-6 space-y-6 max-h-[85vh] overflow-y-auto scrollbar-none">
+        <div>
+          <h4 class="text-[10px] font-black text-slate-500 mb-3 uppercase tracking-widest text-center">Curva de Hipertrofia</h4>
+          <div class="h-36 bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-end justify-around gap-2 shadow-inner" id="weightChartContainer"></div>
+        </div>
+        <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700">
+          <h4 class="text-[10px] font-black text-fuchsia-400 mb-4 uppercase tracking-widest">Nova Auditoria (Evidências Obrigatórias)</h4>
+          <div class="space-y-5">
+            <div>
+              <label class="text-[10px] font-mono text-slate-400 block mb-2 font-bold">1. PESO ATUAL EM KG (Meta: 110KG):</label>
+              <input type="number" id="newWeightInput" step="0.1" placeholder="Ex: 56.8" class="w-full bg-[#02040a] border border-slate-700 rounded-lg px-4 py-3 text-sm font-black text-slate-100 focus:outline-none focus:border-fuchsia-500 transition-colors shadow-inner" oninput="checkClinicForm()">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="text-[10px] font-mono text-slate-500 block mb-2 font-bold">2. FOTO DA BALANÇA:</label>
+                <div class="relative group cursor-pointer h-24" onclick="document.getElementById('fileBalanca').click()">
+                  <div id="previewBalanca" class="w-full h-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 group-hover:border-fuchsia-400 group-hover:bg-fuchsia-50 transition-colors bg-cover bg-center">
+                    <span class="text-xl mb-1">⚖️</span><span class="text-[9px] font-bold uppercase text-slate-600">Anexar</span>
+                  </div>
+                  <input type="file" id="fileBalanca" accept="image/*" class="hidden" capture="environment" onchange="handleClinicPhoto(this, 'previewBalanca')">
+                </div>
+              </div>
+              <div>
+                <label class="text-[10px] font-mono text-slate-500 block mb-2 font-bold">3. FOTO DO SHAPE:</label>
+                <div class="relative group cursor-pointer h-24" onclick="document.getElementById('fileShape').click()">
+                  <div id="previewShape" class="w-full h-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 group-hover:border-fuchsia-400 group-hover:bg-fuchsia-50 transition-colors bg-cover bg-center">
+                    <span class="text-xl mb-1">🧍‍♂️</span><span class="text-[9px] font-bold uppercase text-slate-600">Anexar</span>
+                  </div>
+                  <input type="file" id="fileShape" accept="image/*" class="hidden" capture="user" onchange="handleClinicPhoto(this, 'previewShape')">
+                </div>
+              </div>
+            </div>
+            <button id="btnSalvarClinica" disabled onclick="submitClinicEval()" class="btn-tactical w-full py-3.5 rounded-xl bg-slate-100 text-slate-400 font-black text-xs uppercase tracking-widest transition-all cursor-not-allowed border border-slate-200">
+              Aguardando Provas...
+            </button>
+          </div>
+        </div>
+        <div id="aiLaudoBox" class="p-4 rounded-xl bg-slate-50 border hidden flex-col gap-2 shadow-sm">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xl" id="laudoIcon">🤖</span>
+            <span class="text-[10px] font-black uppercase tracking-widest" id="laudoTitle">Laudo IA</span>
+          </div>
+          <p id="laudoText" class="text-xs text-slate-700 font-medium leading-relaxed"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="memorialModal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm hidden flex-col transition-opacity duration-300 opacity-0">
+    <div class="h-16 border-b border-amber-200 bg-white flex items-center justify-between px-4 sm:px-8 shrink-0 shadow-sm">
+      <h3 class="text-sm font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+        <span>🏆</span> <span>Memorial de Evolução</span>
+      </h3>
+      <button onclick="toggleMemorialModal()" class="text-slate-500 hover:text-slate-900 transition-colors text-xs font-black tracking-wider uppercase">FECHAR ✕</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-4 sm:p-8 scrollbar-none bg-slate-50">
+      <div class="max-w-5xl mx-auto space-y-8 pb-10">
+        <p class="text-[11px] text-slate-500 font-mono text-center max-w-2xl mx-auto uppercase tracking-wider">
+          O registro irrefutável do seu trabalho duro rumo aos 110KG.
+        </p>
+        <div id="memorialGallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notificationsModal" class="fixed inset-0 z-[85] bg-slate-900/60 backdrop-blur-sm hidden justify-end opacity-0 transition-opacity duration-300">
+    <div class="w-full max-w-md bg-slate-50 h-full flex flex-col shadow-2xl transform translate-x-full transition-transform duration-300 border-l border-slate-200" id="notificationsPanel">
+      <div class="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 shrink-0 shadow-sm">
+        <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+          <span>🔔</span> <span>Central de Alertas</span>
+        </h3>
+        <button onclick="toggleNotificationsModal()" class="text-slate-500 hover:text-slate-900 transition-colors text-xs font-black tracking-wider uppercase">FECHAR ✕</button>
+      </div>
+      
+      <div class="p-4 border-b border-slate-200 bg-white shrink-0 flex flex-col gap-2">
+        <button id="btnEnableNotifications" onclick="requestSystemNotifications()" class="btn-tactical w-full py-2.5 rounded-lg bg-blue-50 text-blue-700 font-black text-[10px] uppercase tracking-widest border border-blue-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          Ativar Notificações no Celular/Sistema
+        </button>
+        <p class="text-[9px] text-slate-500 text-center font-medium leading-tight">Para receber alertas com o celular bloqueado, ative a permissão acima e mantenha a aba rodando em segundo plano.</p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 scrollbar-none" id="notificationsContainer">
+        <!-- Notificações Injetadas via JS -->
+      </div>
+      <div class="p-4 bg-white border-t border-slate-200 shrink-0">
+        <button onclick="clearNotifications()" class="w-full text-[10px] font-black text-slate-400 hover:text-slate-700 uppercase tracking-widest transition-colors">Limpar Histórico</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastBox" class="fixed bottom-6 right-6 z-[100] transform translate-y-24 opacity-0 transition-all duration-500 pointer-events-none max-w-sm w-full">
+    <div class="glass-panel bg-white border-l-4 border-l-emerald-500 shadow-neon p-4 rounded-xl relative overflow-hidden">
+      <div id="toastProgressBar" class="absolute bottom-0 left-0 h-1 bg-emerald-500 w-full transform origin-left"></div>
+      <div class="flex items-start gap-3">
+        <span class="text-2xl animate-bounce" id="toastIcon">🔔</span>
+        <div class="flex-1">
+          <h5 id="toastTitle" class="font-black text-emerald-600 text-[10px] tracking-widest uppercase">ALERTA</h5>
+          <p id="toastMessage" class="text-xs text-slate-700 mt-1 font-medium leading-relaxed">...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="timelinePhotoInput" accept="image/*" class="hidden" capture="environment">
+
+  <script>
+    const WEEK_DATA = {
+      seg: {
+        badge: "Segunda-Feira", title: "Push (Empurrar) + Hipercalórico", 
+        devTip: "Segunda. Corpo catabólico do sono. Beba o shake matinal e faça as flexões focando na descida controlada.",
+        exercises: [
+          { id: 'pushup', name: 'Flexão Militar', muscle: 'Peitoral/Core', sets: '4x 10-15', duration: 20, tips: ['Mantenha o corpo reto como uma prancha', 'Desça o peito até 2 dedos do chão (Controle a descida em 3 segundos)', 'Exploda na subida', 'Cotovelos não devem abrir 90 graus, mantenha a 45 graus do corpo'] },
+          { id: 'bench_dips', name: 'Tríceps no Banco/Cadeira', muscle: 'Tríceps', sets: '4x 12', duration: 20, tips: ['Mantenha o tronco colado ao banco, não vá para frente', 'Desça até os cotovelos formarem 90 graus', 'Empurre usando a força do tríceps, não das pernas'] },
+          { id: 'ohp', name: 'Ombros Frontal (Mochila Pesada)', muscle: 'Ombros/Deltoide', sets: '3x 12', duration: 20, tips: ['Trave o abdômen para não arquear a lombar', 'Empurre o peso acima da cabeça esticando os braços', 'Desça lentamente até a altura do peitoral'] }
+        ],
+        timeline: [
+          { 
+            time: '06:00', title: 'Pré-Treino Expresso', category: 'meal', icon: '🍌', targetWeight: '0.3 KG', desc: 'Carbo de absorção rápida (15min antes). Pese rigorosamente.',
+            recipe: { ingredients: ["250g de Banana (Prata ou Nanica)", "50g (2 Colheres sopa) de Mel Puro"], prep: "Amasse a banana em um prato, jogue o mel por cima e coma imediatamente antes de iniciar o aquecimento. Se der menos de 0.3 KG, coloque mais mel." }
+          },
+          { time: '06:30 - 07:30', title: 'TREINO A: Push (Peito, Ombro, Tríceps)', category: 'workout', icon: '🔥', desc: 'Flexões, Tríceps banco e Ombros. Alta intensidade.', recipe: null },
+          { 
+            time: '08:00', title: 'Super Shake Anabólico', category: 'meal', icon: '🥤', targetWeight: '0.8 KG', desc: 'Líquido denso (fácil digestão). O liquidificador vai estar cheio.',
+            recipe: { ingredients: ["500ml (500g) de Leite Integral", "200g Bananas", "60g Aveia", "40g Pasta de Amendoim"], prep: "Bata tudo por 1 minuto. Beba devagar. Esse shake fornece as calorias que você não conseguiria mastigar de manhã. Pese o copo cheio." }
+          },
+          { 
+            time: '12:30', title: 'Almoço Farto de Bulking', category: 'meal', icon: '🍛', targetWeight: '1.2 KG', desc: 'Densidade calórica brutal. Você vai ter que empurrar a comida.',
+            recipe: { ingredients: ["600g de Arroz Branco", "300g de Feijão", "250g de Peito de Frango (ou Carne Moída)", "50g Azeite e Vegetais"], prep: "A balança da cozinha é seu deus agora. Prato na balança, zere a tara. Vá colocando arroz até bater 600g. Coma com água SÓ no final se não aguentar." }
+          },
+          { 
+            time: '16:00', title: 'Lanche Base (Setup)', category: 'meal', icon: '🥪', targetWeight: '0.5 KG', desc: 'Sanduíche hipercalórico em frente ao código.',
+            recipe: { ingredients: ["150g Pão de Forma", "100g Pasta de Amendoim", "250g Iogurte Natural Integral"], prep: "Passe a pasta nos pães. Use o iogurte para ajudar a descer. O peso total da refeição na balança tem que ser 0.5 KG ou mais." }
+          },
+          { time: '19:00 - 19:40', title: 'Caminhada (Digestão)', category: 'cardio', icon: '🚶‍♂️', desc: 'Apenas 40 min em ritmo leve para oxigenar e abrir espaço no estômago.', recipe: null },
+          { 
+            time: '20:15', title: 'Jantar Macarronada', category: 'meal', icon: '🍝', targetWeight: '1.5 KG', desc: 'Macarrão escorrega fácil. A maior refeição do seu dia.',
+            recipe: { ingredients: ["900g de Macarrão (peso cozido)", "400g de Carne Moída ou Frango desfiado", "200g Molho de Tomate a gosto e azeite"], prep: "Ferva a água, cozinhe o macarrão. Pese o prato: exija de si mesmo bater as 1.5 KG para forçar o ganho extremo." }
+          },
+          { 
+            time: '22:00', title: 'Ceia: Mingau Anabólico Noturno', category: 'meal', icon: '🥣', targetWeight: '0.6 KG', desc: 'Nutrição prolongada enquanto você dorme.',
+            recipe: { ingredients: ["450ml (450g) de Leite Integral", "100g de Aveia em flocos", "50g Mel ou Nescau"], prep: "Coloque o leite e aveia numa caneca funda. Microondas por 2 min. O peso total da mistura tem que passar de 0.6 KG." }
+          }
+        ]
+      },
+      ter: {
+        badge: "Terça-Feira", title: "Pull (Puxar) + Bicicleta", 
+        devTip: "Foco nas costas hoje (remada). Acelere na bicicleta no fim do dia (intensidade, não longa duração).",
+        exercises: [
+          { id: 'bent_row', name: 'Remada Curvada (Mochila)', muscle: 'Costas/Dorsal', sets: '4x 12', duration: 30, tips: ['Curve o tronco a 45 graus, coluna impecavelmente reta', 'Puxe a mochila pesada em direção ao umbigo', 'Sinta as escápulas das costas esmagarem no topo'] },
+          { id: 'bicep_curl', name: 'Bíceps Livre (Mochila/Peso)', muscle: 'Bíceps', sets: '4x 12', duration: 30, tips: ['Cole os cotovelos nas costelas, não os deixe ir para a frente', 'Levante o peso apertando o bíceps', 'Controle a descida (não solte o peso de uma vez)'] }
+        ],
+        timeline: [
+          { 
+            time: '06:00', title: 'Pré-Treino Rápido', category: 'meal', icon: '🍞', targetWeight: '0.3 KG', desc: 'Glicogênio rápido antes da calistenia.',
+            recipe: { ingredients: ["200g (4 fatias) de Pão de Forma", "100g Geleia de Morango/Uva"], prep: "Passe a geleia. Pese na balança. Bateu 0.3 KG? Coma e vá treinar." }
+          },
+          { time: '06:30 - 07:30', title: 'TREINO B: Pull (Puxar)', category: 'workout', icon: '💪', desc: 'Costas e Bíceps. Foco total em amplitude.', recipe: null },
+          { 
+            time: '08:00', title: 'Café Protéico (Ovos)', category: 'meal', icon: '🍳', targetWeight: '0.6 KG', desc: 'Pós-treino salgado para reconstrução.',
+            recipe: { ingredients: ["250g (5 Ovos inteiros)", "200g Pão", "150g Leite/Café"], prep: "Ovos mexidos na manteiga. Exija bater 0.6 KG no total da refeição sólida e líquida." }
+          },
+          { 
+            time: '12:30', title: 'Almoço Padrão de Combate', category: 'meal', icon: '🥩', targetWeight: '1.2 KG', desc: 'Você já sabe as regras. 1.2 KG de comida.',
+            recipe: { ingredients: ["600g Arroz Branco", "300g Feijão", "250g Carne Bovina (Patinho/Moída)", "50g Azeite"], prep: "Balança na mesa. Bote comida até o visor marcar 1.200g." }
+          },
+          { 
+            time: '16:00', title: 'Super Shake Tático', category: 'meal', icon: '🥤', targetWeight: '0.8 KG', desc: 'Combustível pré-bicicleta.',
+            recipe: { ingredients: ["500g Leite Integral", "200g Bananas", "60g Aveia", "40g Pasta Amendoim"], prep: "Liquidificador. Beba aos poucos enquanto estuda ou trabalha." }
+          },
+          { time: '18:30 - 19:15', title: 'Ciclismo (Bicicleta)', category: 'cardio', icon: '🚴‍♂️', desc: '45 min pedalada marcha pesada. Hipertrofia de coxa.', recipe: null },
+          { 
+            time: '20:15', title: 'Jantar (Reposição Rápida)', category: 'meal', icon: '🥘', targetWeight: '1.5 KG', desc: 'O ciclismo drena as reservas. Reponha brutalmente.',
+            recipe: { ingredients: ["900g de Purê de batata", "400g de Frango desfiado", "200g de Molho/Azeite"], prep: "Batata tem índice glicêmico alto. 1.5 KG de purê com frango desce rápido." }
+          },
+          { 
+            time: '22:00', title: 'Ceia Leve Noturna', category: 'meal', icon: '🥛', targetWeight: '0.5 KG', desc: 'Reparação sem pesar o estômago.',
+            recipe: { ingredients: ["500g de Leite Integral", "Opcional: Achocolatado"], prep: "Beba meio litro de leite e vá dormir." }
+          }
+        ]
+      },
+      qua: {
+        badge: "Quarta-Feira", title: "Descanso Ativo & Superávit", 
+        devTip: "DIA DE CRESCER. Hoje não tem treino muscular, mas o corpo precisa das MESMAS quantidades de comida para construir as fibras rompidas.",
+        exercises: [],
+        timeline: [
+          { 
+            time: '08:00', title: 'Café: Panqueca Anabólica', category: 'meal', icon: '🥞', targetWeight: '0.6 KG', desc: 'Acorde e coloque calorias para dentro.',
+            recipe: { ingredients: ["200g Ovos", "200g Banana amassada", "100g Aveia", "100g Mel"], prep: "Bata no garfo. Frite. A panqueca na balança tem que dar 0.6 KG." }
+          },
+          { 
+            time: '10:30', title: 'Lanche Intermediário', category: 'meal', icon: '🍎', targetWeight: '0.4 KG', desc: 'Mantendo o balanço nitrogenado.',
+            recipe: { ingredients: ["300g (2) Maçãs", "100g Castanhas de Caju"], prep: "Mastigue enquanto programa. Pese os 0.4 KG." }
+          },
+          { 
+            time: '12:30', title: 'Almoço de Descanso', category: 'meal', icon: '🍛', targetWeight: '1.2 KG', desc: 'Constância é o segredo.',
+            recipe: { ingredients: ["600g Arroz", "300g Feijão", "250g Frango", "50g Azeite"], prep: "Sem desculpas no dia de descanso. Prato na balança: 1.2 KG." }
+          },
+          { 
+            time: '16:00', title: 'Super Shake Tático', category: 'meal', icon: '🥤', targetWeight: '0.8 KG', desc: 'Obrigatório para forçar o ganho de peso.',
+            recipe: { ingredients: ["500g Leite", "200g Bananas", "60g Aveia", "40g Pasta Amendoim"], prep: "O de sempre. 800 gramas de líquido direto pro estômago." }
+          },
+          { time: '19:00 - 19:30', title: 'Caminhada Leve (Opcional)', category: 'cardio', icon: '🚶‍♂️', desc: 'Apenas 30 min para circular o sangue nas pernas.', recipe: null },
+          { 
+            time: '20:30', title: 'Jantar', category: 'meal', icon: '🍲', targetWeight: '1.5 KG', desc: 'Aproveite o descanso para comer mais.',
+            recipe: { ingredients: ["900g Macarrão cozido", "400g Carne moída", "200g Azeite/Molho"], prep: "Mais 1.5 KG de carga calórica. Só engole." }
+          },
+          { 
+            time: '22:00', title: 'Ceia: Iogurte', category: 'meal', icon: '🥄', targetWeight: '0.5 KG', desc: 'Finalizando o dia perfeito.',
+            recipe: { ingredients: ["350g Iogurte Natural", "100g Aveia", "50g Mel"], prep: "Misture tudo numa cumbuca. Meio quilo de ceia." }
+          }
+        ]
+      },
+      qui: {
+        badge: "Quinta-Feira", title: "Legs (Pernas)", 
+        devTip: "Treino de pernas libera uma descarga massiva de testosterona e GH no corpo todo. Sofra hoje, colha os frutos a semana toda.",
+        exercises: [ 
+          { id: 'squat_plate', name: 'Agachamento Livre (Mochila)', muscle: 'Quadríceps/Glúteo', sets: '4x 15', duration: 60, tips: ['Desça profundo até a coxa passar da linha do joelho', 'Calcanhares colados no chão o tempo todo (se o calcanhar levantar, abra mais as pernas)', 'Mantenha o peito estufado olhando para frente'] } 
+        ],
+        timeline: [
+          { 
+            time: '06:00', title: 'Pré-Treino Intenso', category: 'meal', icon: '🍌', targetWeight: '0.4 KG', desc: 'Energia primária para pernas.',
+            recipe: { ingredients: ["300g (2) Bananas", "50g Aveia", "50g Mel"], prep: "Amassar tudo. Pese 0.4 KG. O treino vai ser pesado." }
+          },
+          { time: '06:30 - 07:30', title: 'TREINO C: Pernas Completas', category: 'workout', icon: '🦵', desc: 'Agachamentos com peso, afundo e panturrilhas.', recipe: null },
+          { 
+            time: '08:00', title: 'Pós-Treino Construtor', category: 'meal', icon: '🍳', targetWeight: '0.7 KG', desc: 'Café da manhã hiper-reforçado.',
+            recipe: { ingredients: ["250g (5) Ovos", "200g Pão", "250g Leite"], prep: "As pernas são os maiores músculos. O café pós pernas precisa bater 0.7 KG." }
+          },
+          { 
+            time: '12:30', title: 'Almoço Pesado', category: 'meal', icon: '🥩', targetWeight: '1.3 KG', desc: 'Pernas sugam energia. Hora de repor brutalmente.',
+            recipe: { ingredients: ["700g Arroz", "300g Feijão", "250g Frango", "50g Azeite"], prep: "Maior prato da semana. A balança precisa bater 1.3 KG." }
+          },
+          { 
+            time: '16:00', title: 'Lanche: Sanduíche', category: 'meal', icon: '🥪', targetWeight: '0.5 KG', desc: 'Fácil consumo.',
+            recipe: { ingredients: ["200g Pão", "150g Pasta de Amendoim", "150g Iogurte"], prep: "Manda 0.5 KG pra dentro." }
+          },
+          { time: '19:00', title: 'Descanso Total', category: 'cardio', icon: '🛋️', desc: 'Evite andar muito hoje para não piorar a dor nas pernas.', recipe: null },
+          { 
+            time: '20:15', title: 'Jantar Restaurador', category: 'meal', icon: '🥔', targetWeight: '1.5 KG', desc: 'Carbo para repor músculos.',
+            recipe: { ingredients: ["900g Batata Cozida", "400g Proteína", "200g Azeite"], prep: "A balança não mente. 1.5 KG no visor." }
+          },
+          { 
+            time: '22:00', title: 'Ceia Noturna', category: 'meal', icon: '🥛', targetWeight: '0.5 KG', desc: 'Leite antes de dormir.',
+            recipe: { ingredients: ["500g de Leite morno", "Canela"], prep: "Meio quilo de líquido direto pro sono profundo." }
+          }
+        ]
+      },
+      sex: {
+        badge: "Sexta-Feira", title: "Upper Body + Bicicleta", 
+        devTip: "Esvazie o tanque hoje! É o último treino pesado antes do fim de semana livre. O esforço final da semana conta o dobro.",
+        exercises: [
+          { id: 'pushup', name: 'Flexão (Declinada/Pés Elevados)', muscle: 'Peito Superior', sets: '3x 12', duration: 30, tips: ['Coloque os pés em um sofá ou cadeira para jogar o peso pro peito superior', 'Corpo reto, não deixe o quadril cair', 'Desça até o nariz quase tocar o chão'] },
+          { id: 'bent_row', name: 'Remada Unilateral', muscle: 'Costas', sets: '3x 12', duration: 30, tips: ['Apoie uma mão no sofá e puxe a mochila pesada com a outra', 'Puxe focado em encostar o cotovelo no teto', 'Não gire o tronco'] }
+        ],
+        timeline: [
+          { 
+            time: '06:00', title: 'Pré-Treino', category: 'meal', icon: '🍞', targetWeight: '0.3 KG', desc: 'Pão e geleia de lei.',
+            recipe: { ingredients: ["200g Pão", "100g Geleia"], prep: "Pese 0.3 KG. Comer rápido." }
+          },
+          { time: '06:30 - 07:30', title: 'TREINO D: Upper (Superiores)', category: 'workout', icon: '🔥', desc: 'Flexões, Remadas e Ombros.', recipe: null },
+          { 
+            time: '08:00', title: 'Vitamina de Pós-Treino', category: 'meal', icon: '🥤', targetWeight: '1.0 KG', desc: 'Volume altíssimo.',
+            recipe: { ingredients: ["500g Leite", "200g Bananas", "100g Aveia", "200g (4 Ovos Cozidos)"], prep: "Bata a vitamina, coma os ovos. A refeição total precisa bater 1.0 KG exato." }
+          },
+          { 
+            time: '12:30', title: 'Almoço Padrão', category: 'meal', icon: '🍛', targetWeight: '1.2 KG', desc: 'Manter a linha de produção.',
+            recipe: { ingredients: ["600g Arroz", "300g Feijão", "250g Frango", "50g Azeite"], prep: "Prato na balança. 1.2 KG. Sem desculpas." }
+          },
+          { 
+            time: '16:00', title: 'Lanche Intermediário', category: 'meal', icon: '🍎', targetWeight: '0.5 KG', desc: 'Iogurte pesado.',
+            recipe: { ingredients: ["300g Iogurte", "200g Granola/Aveia"], prep: "Misture na tigela até bater 0.5 KG." }
+          },
+          { time: '18:30 - 19:15', title: 'Ciclismo (Bicicleta)', category: 'cardio', icon: '🚴‍♂️', desc: '45 min pedalada finalizando o aeróbico.', recipe: null },
+          { 
+            time: '20:15', title: 'Jantar: Hambúrguer', category: 'meal', icon: '🍔', targetWeight: '1.0 KG', desc: 'Dirty Bulk Limpo.',
+            recipe: { ingredients: ["300g Pães de Hambúrguer", "500g Carne Moída (blend)", "100g Queijo", "100g Molhos"], prep: "Frte, monte, pese. 1.0 KG de pura caloria de fim de semana." }
+          },
+          { 
+            time: '22:30', title: 'Ceia', category: 'meal', icon: '🥣', targetWeight: '0.6 KG', desc: 'Mingau para fechar a semana.',
+            recipe: { ingredients: ["450g Leite", "150g Aveia"], prep: "0.6 KG pro estômago. Durma." }
+          }
+        ]
+      },
+      sab: {
+        badge: "Sábado", title: "Recuperação & Vida Social", 
+        devTip: "Não pule refeições só porque acordou tarde! É no Sábado que o Ectomorfo perde peso por puro esquecimento de comer.",
+        exercises: [],
+        timeline: [
+          { 
+            time: '09:30', title: 'Café Livre & Farto', category: 'meal', icon: '🥞', targetWeight: '0.8 KG', desc: 'Coma muito agora.',
+            recipe: { ingredients: ["Livre (Tapioca, Pão, Ovos, Leite)"], prep: "Monte o café, coloque o prato na balança. Se não der 0.8 KG, coloque mais pão." }
+          },
+          { 
+            time: '13:00', title: 'Almoço de Fim de Semana', category: 'meal', icon: '🍖', targetWeight: '1.5 KG', desc: 'Churrasco ou massa. Liberado.',
+            recipe: { ingredients: ["Livre (Churrasco, Lasanha, Feijoada)"], prep: "1.5 KG é fácil quando a comida é suja. Pese o prato." }
+          },
+          { 
+            time: '17:00', title: 'Shake da Tarde', category: 'meal', icon: '🥤', targetWeight: '0.8 KG', desc: 'Impeça o catabolismo no rolê.',
+            recipe: { ingredients: ["500g Leite", "150g Aveia/Nescau", "150g Pasta Amendoim"], prep: "Se for sair, bata e vire 0.8 KG líquidos antes de sair." }
+          },
+          { time: '19:00', title: 'Lazer', category: 'dev', icon: '🎮', desc: 'Jogar, sair, relaxar.', recipe: null },
+          { 
+            time: '21:00', title: 'Jantar / Pizza', category: 'meal', icon: '🍕', targetWeight: '1.2 KG', desc: 'Refeição Livre.',
+            recipe: { ingredients: ["Livre (Pizza, Lanche, etc)"], prep: "No sábado à noite tudo vale. A balança tem que marcar 1.2 KG." }
+          }
+        ]
+      },
+      dom: {
+        badge: "Domingo", title: "Meal Prep & Planejamento", 
+        devTip: "A semana é ganha ou perdida hoje. Faça sua Meal Prep (Marmitas). Quem tem a comida pronta, não fura a dieta na correria.",
+        exercises: [],
+        timeline: [
+          { 
+            time: '09:30', title: 'Café da Manhã', category: 'meal', icon: '🍳', targetWeight: '0.6 KG', desc: 'Ovos e Pão, tranquilo.',
+            recipe: { ingredients: ["300g Ovos", "300g Pão e acompanhamentos"], prep: "Preparar sem pressa. Pesar 0.6 KG." }
+          },
+          { 
+            time: '13:00', title: 'Almoço de Domingo', category: 'meal', icon: '🍝', targetWeight: '1.5 KG', desc: 'Macarronada de Domingo.',
+            recipe: { ingredients: ["900g Macarrão", "600g Frango/Carne"], prep: "Macarrão é denso. 1.5 KG no prato cheio." }
+          },
+          { 
+            time: '16:00', title: 'MEAL PREP (Cozinha)', category: 'dev', icon: '🍱', desc: 'Preparo logístico.',
+            recipe: { ingredients: ["1.5 KG Frango", "2 KG Arroz", "1 KG Feijão"], prep: "Cozinhe tudo para 3 dias. Deixe as marmitas pesadas prontas." }
+          },
+          { 
+            time: '19:30', title: 'Jantar', category: 'meal', icon: '🍲', targetWeight: '1.2 KG', desc: 'Estreando a marmita.',
+            recipe: { ingredients: ["600g Arroz", "300g Feijão", "250g Frango", "50g Azeite"], prep: "Esquentar a marmita, colocar na balança: 1.2 KG obrigatório." }
+          },
+          { 
+            time: '22:00', title: 'Preparação para o Sono', category: 'meal', icon: '📴', targetWeight: '0.6 KG', desc: 'Mingau e Desligamento.',
+            recipe: { ingredients: ["450g Leite Quente", "150g Aveia"], prep: "Desligue as telas. Amanhã recomeça a batalha. 0.6 KG e berço." }
+          }
+        ]
+      }
+    };
+
+    const DEFAULT_GROCERY = {
+      carbs: [ 
+        {name: 'Arroz Branco (5kg)', checked: false, sub: 'Macarrão / Batata Doce'}, 
+        {name: 'Aveia em Flocos (1kg)', checked: false, sub: 'Farinha de Arroz'}, 
+        {name: 'Macarrão (2kg)', checked: false, sub: 'Pão de Forma / Tapioca'}, 
+        {name: 'Bananas (2 dúzias)', checked: false, sub: 'Maçã / Pera'}, 
+        {name: 'Pão de Forma', checked: false, sub: 'Pão Francês'} 
+      ],
+      proteins: [ 
+        {name: 'Peito de Frango (3kg)', checked: false, sub: 'Patinho Moído / Atum Enlatado'}, 
+        {name: 'Carne Moída (2kg)', checked: false, sub: 'Ovos (+2 na refeição)'}, 
+        {name: 'Ovos (2 Cartelas - 60 un)', checked: false, sub: 'Whey Protein / Albumina'}, 
+        {name: 'Leite Integral (6 Litros)', checked: false, sub: 'Iogurte Integral'} 
+      ],
+      fats: [ 
+        {name: 'Pasta de Amendoim (1kg)', checked: false, sub: 'Amendoim Torrado'}, 
+        {name: 'Azeite Extra Virgem (500ml)', checked: false, sub: 'Óleo de Coco'}, 
+        {name: 'Mel', checked: false, sub: 'Doce de Leite'} 
+      ]
+    };
+
+    const AI_TIPS = [
+      "Para ganhar 4.8kg/semana você tem que comer mesmo sem fome. A balança da cozinha é seu único deus agora.",
+      "O ectomorfo tem digestão rápida. Se o prato não tiver 1.2 KG no almoço, o corpo cataboliza.",
+      "Água é transporte! Beba 500ml agora para levar os nutrientes para o músculo.",
+      "Projeto 110kg ativo! Empurre a comida. Se a balança não bater a meta em KG, não saia da mesa.",
+      "Costas retas! Codificar com postura de tartaruga destrói sua biomecânica pro treino da noite."
+    ];
+
+    let currentDayKey = 'seg';
+    let currentExerciseId = 'pushup';
+    let isSimPlaying = true;
+    let simTime = 0, repCount = 0, lastPhase = '';
+    let restTimerInterval = null, restSecondsLeft = 60;
+    
+    const todayStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+    let dailyProofs = JSON.parse(localStorage.getItem('titanDailyProofs')) || {};
+    
+    let notificationHistory = JSON.parse(localStorage.getItem('titanNotifications')) || [];
+    let processedAlerts = JSON.parse(localStorage.getItem('titanProcessedAlerts')) || {}; // Para não notificar duas vezes
+
+    let weightHistory = JSON.parse(localStorage.getItem('titanWeightsExtremo')) || [
+      { id: Date.now()-604800000, weight: 51.5, diff: 0, date: 'Sem. Ant.', scalePhoto: '', bodyPhoto: '' },
+      { id: Date.now(), weight: 52.0, diff: 0.5, date: 'Esta Sem.', scalePhoto: '', bodyPhoto: '' }
+    ];
+    let groceryData = JSON.parse(localStorage.getItem('titanGrocery')) || DEFAULT_GROCERY;
+    let pendingTimelineActionId = null;
+
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+    function playBeep(freq = 880, type = 'sine', duration = 0.15) {
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    let toastTimeout = null;
+    function showToast(title, msg, icon = '🔔', urgent = false) {
+      const box = document.getElementById('toastBox');
+      const bar = document.getElementById('toastProgressBar');
+      document.getElementById('toastTitle').innerText = title;
+      document.getElementById('toastMessage').innerText = msg;
+      document.getElementById('toastIcon').innerText = icon;
+      
+      if(urgent) {
+        box.querySelector('.glass-panel').classList.remove('border-l-emerald-500', 'shadow-neon');
+        box.querySelector('.glass-panel').classList.add('border-l-red-500', 'shadow-soft');
+        bar.classList.replace('bg-emerald-500', 'bg-red-500');
+        document.getElementById('toastTitle').classList.replace('text-emerald-600', 'text-red-600');
+      } else {
+        box.querySelector('.glass-panel').classList.add('border-l-emerald-500', 'shadow-soft');
+        box.querySelector('.glass-panel').classList.remove('border-l-red-500', 'shadow-neon-strong');
+        bar.classList.replace('bg-red-500', 'bg-emerald-500');
+        document.getElementById('toastTitle').classList.replace('text-red-600', 'text-emerald-600');
+      }
+
+      box.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      bar.style.transition = 'none'; bar.style.transform = 'scaleX(1)';
+      setTimeout(() => { bar.style.transition = 'transform 4000ms linear'; bar.style.transform = 'scaleX(0)'; }, 50);
+      
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => { box.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none'); }, 4000);
+    }
+
+    function requestSystemNotifications() {
+      if (!("Notification" in window)) {
+        alert("Seu navegador não suporta notificações de sistema.");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          document.getElementById('btnEnableNotifications').className = 'btn-tactical w-full py-2.5 rounded-lg bg-emerald-50 text-emerald-700 font-black text-[10px] uppercase tracking-widest border border-emerald-200 flex items-center justify-center gap-2';
+          document.getElementById('btnEnableNotifications').innerHTML = '✅ Notificações Ativadas';
+          pushSystemNotification("TitanGain OS", "Conexão estabelecida. Você será alertado sobre seus treinos e refeições.", "✅");
+        } else {
+          alert("Permissão negada. Você não receberá alertas fora do app.");
+        }
+      });
+    }
+
+    function pushSystemNotification(title, body, icon = '🤖') {
+      if ("Notification" in window && Notification.permission === "granted") {
+        // Usa a API de notificação nativa do sistema/celular
+        try {
+          new Notification(`${icon} ${title}`, {
+            body: body,
+            icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png', // Ícone genérico de escudo/sistema
+            badge: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png',
+            vibrate: [200, 100, 200, 100, 200, 100, 200]
+          });
+        } catch(e) {} // Fallback silencioso
+      }
+    }
+
+    function createNotificationRecord(type, title, message) {
+      const notif = {
+        id: Date.now(),
+        type: type, // 'penalty', 'alert', 'success'
+        title: title,
+        message: message,
+        time: new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}),
+        read: false
+      };
+      notificationHistory.unshift(notif);
+      if(notificationHistory.length > 50) notificationHistory.pop();
+      localStorage.setItem('titanNotifications', JSON.stringify(notificationHistory));
+      updateNotificationBadge();
+      if(!document.getElementById('notificationsModal').classList.contains('hidden')) {
+        renderNotifications();
+      }
+    }
+
+    function updateNotificationBadge() {
+      const unreadCount = notificationHistory.filter(n => !n.read).length;
+      const badge = document.getElementById('notifBadgeCount');
+      if(unreadCount > 0) {
+        badge.innerText = unreadCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function toggleNotificationsModal() {
+      const m = document.getElementById('notificationsModal');
+      const panel = document.getElementById('notificationsPanel');
+      if (m.classList.contains('hidden')) {
+        m.classList.remove('hidden'); m.classList.add('flex');
+        setTimeout(() => {
+          m.classList.remove('opacity-0');
+          panel.classList.remove('translate-x-full');
+        }, 10);
+        
+        // Marca como lidas ao abrir
+        notificationHistory.forEach(n => n.read = true);
+        localStorage.setItem('titanNotifications', JSON.stringify(notificationHistory));
+        updateNotificationBadge();
+        renderNotifications();
+      } else {
+        panel.classList.add('translate-x-full');
+        m.classList.add('opacity-0');
+        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+      }
+    }
+
+    function renderNotifications() {
+      const container = document.getElementById('notificationsContainer');
+      container.innerHTML = '';
+      if(notificationHistory.length === 0) {
+        container.innerHTML = '<div class="text-center text-xs text-slate-400 font-mono mt-10">Nenhum registro no radar.</div>';
+        return;
+      }
+
+      notificationHistory.forEach(n => {
+        let styleClass = 'bg-white border-slate-200';
+        let icon = '🔔';
+        if(n.type === 'penalty') { styleClass = 'notif-penalty border-red-200'; icon = '🚨'; }
+        else if(n.type === 'success') { styleClass = 'border-l-4 border-l-emerald-500 bg-emerald-50/30'; icon = '✅'; }
+
+        container.innerHTML += `
+          <div class="p-3 rounded-lg border ${styleClass} shadow-sm mb-3 relative overflow-hidden group">
+            <div class="flex items-start gap-3">
+              <span class="text-xl shrink-0">${icon}</span>
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <h5 class="text-[10px] font-black uppercase tracking-widest ${n.type === 'penalty' ? 'text-red-700' : 'text-slate-800'}">${n.title}</h5>
+                  <span class="text-[9px] font-mono text-slate-500">${n.time}</span>
+                </div>
+                <p class="text-xs text-slate-600 font-medium leading-relaxed">${n.message}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function clearNotifications() {
+      notificationHistory = [];
+      localStorage.setItem('titanNotifications', JSON.stringify([]));
+      renderNotifications();
+      updateNotificationBadge();
+    }
+
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const MAX_WIDTH = 250; 
+          let scaleSize = MAX_WIDTH / img.width;
+          if (scaleSize > 1) scaleSize = 1;
+          canvas.width = img.width * scaleSize;
+          canvas.height = img.height * scaleSize;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          callback(canvas.toDataURL('image/jpeg', 0.5));
+        }
+        img.src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+
+    const canvas = document.getElementById('exerciseCanvas');
+    const ctx = canvas.getContext('2d');
+    function setupCanvasDPI() {
+      if (!canvas || !ctx) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width > 0 ? rect.width : 480;
+      const h = rect.height > 0 ? rect.height : 280;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', setupCanvasDPI);
+
+    function drawJoint(x, y, r=4, color='#475569') { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill(); }
+    function drawBone(x1, y1, x2, y2, w=5, color='#cbd5e1') { ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+    function drawArrow(ctx, fromX, fromY, toX, toY, color) {
+      const headlen = 8; const dx = toX - fromX; const dy = toY - fromY; const angle = Math.atan2(dy, dx);
+      ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3;
+      ctx.moveTo(fromX, fromY); ctx.lineTo(toX, toY);
+      ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
+      ctx.moveTo(toX, toY); ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
+      ctx.stroke();
+    }
+
+    function renderSimulation() {
+      if (!ctx) return;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width > 0 ? rect.width : 480; const h = rect.height > 0 ? rect.height : 280;
+      ctx.clearRect(0, 0, w, h);
+
+      const floorY = h * 0.85;
+      ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, floorY); ctx.lineTo(w, floorY); ctx.stroke();
+
+      if (isSimPlaying) simTime += 0.035;
+      const rawCycle = Math.sin(simTime); const phase = (rawCycle + 1) / 2;
+
+      const phaseEl = document.getElementById('simPhaseLabel');
+      const isConcentric = Math.cos(simTime) > 0;
+      if (phaseEl) {
+        phaseEl.innerText = isConcentric ? 'CONCÊNTRICA' : 'EXCÊNTRICA';
+        phaseEl.className = isConcentric ? 'text-emerald-600 font-black' : 'text-cyan-600 font-black';
+      }
+
+      if (rawCycle > 0.98 && lastPhase === 'up') { repCount++; lastPhase = 'down'; document.getElementById('simRepCounter').innerText = repCount; } 
+      else if (rawCycle < -0.98) { lastPhase = 'up'; }
+
+      const headColor = '#1e293b'; 
+
+      ctx.font = 'bold 12px monospace';
+      ctx.textAlign = 'center';
+
+      if(currentExerciseId === 'pushup') {
+        const fX = w*0.2, fY = floorY-4, hX = w*0.65, hY = floorY-4;
+        const shY = floorY-50 - phase*65, hipY = floorY-45 - phase*50;
+        const shX = w*0.6, hipX = w*0.4;
+        
+        // Glow on target muscle
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 15;
+        drawBone(hipX, hipY, shX, shY, 9, '#10b981'); // Peito em foco
+        ctx.shadowBlur = 0;
+
+        drawBone(fX, fY, hipX, hipY, 6); 
+        const elbX = (hX+shX)/2 - (1-phase)*25, elbY = (hY+shY)/2 + 10;
+        drawBone(shX, shY, elbX, elbY, 5, '#94a3b8'); drawBone(elbX, elbY, hX, hY, 4, '#94a3b8');
+        drawJoint(hipX, hipY); drawJoint(shX, shY); drawJoint(elbX, elbY); drawJoint(shX+15, shY-12, 10, headColor);
+
+        // Arrows
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ EXPLOSÃO", w/2, 40); drawArrow(ctx, shX, shY-10, shX, shY-40, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ CONTROLE A DESCIDA (3s)", w/2, 40); drawArrow(ctx, shX, shY-40, shX, shY-10, '#0284c7'); }
+      } 
+      else if(currentExerciseId === 'squat_plate') {
+        const fX = w*0.5, fY = floorY-4;
+        const hipY = floorY-50 - phase*60, hipX = fX - (1-phase)*25;
+        const knX = fX + (1-phase)*15, knY = floorY-30 - phase*20;
+        const shX = hipX + 5 + (1-phase)*15, shY = hipY-60 - phase*10;
+        
+        // Glow on target muscle (Pernas)
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 15;
+        drawBone(hipX, hipY, knX, knY, 10, '#10b981'); // Coxa
+        ctx.shadowBlur = 0;
+
+        drawBone(fX, fY, knX, knY, 7); drawBone(hipX, hipY, shX, shY, 8, '#94a3b8');
+        drawJoint(knX, knY); drawJoint(hipX, hipY); drawJoint(shX, shY); drawJoint(shX+5, shY-15, 12, headColor);
+
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ SUBIDA (Aperte o Glúteo)", w/2, 40); drawArrow(ctx, hipX-20, hipY, hipX-20, hipY-30, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ DESCIDA FUNDA (Lento)", w/2, 40); drawArrow(ctx, hipX-20, hipY-30, hipX-20, hipY, '#0284c7'); }
+      }
+      else if(currentExerciseId === 'bent_row') {
+        const fX = w*0.45, fY = floorY-4; const hipX = fX-15, hipY = floorY-85; const shX = hipX+50, shY = hipY-20;
+        drawBone(fX, fY, hipX, hipY, 6); 
+        
+        // Glow Costas
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 15;
+        drawBone(hipX, hipY, shX, shY, 10, '#10b981'); // Costas
+        ctx.shadowBlur = 0;
+
+        const hY = shY + 25 + phase*40, hX = shX-5;
+        const elbX = shX-15-(1-phase)*15, elbY = shY+10+(1-phase)*5;
+        drawBone(shX, shY, elbX, elbY, 5, '#94a3b8'); drawBone(elbX, elbY, hX, hY, 5, '#94a3b8');
+        drawJoint(elbX, elbY); drawJoint(shX+15, shY-10, 11, headColor);
+        
+        // Peso (Mochila)
+        ctx.fillStyle='#64748b'; ctx.fillRect(hX-10, hY, 20, 20);
+
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ ESMAGUE AS COSTAS", w/2, 40); drawArrow(ctx, hX+20, hY, hX+20, hY-30, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ ALONGUE ATÉ O FIM", w/2, 40); drawArrow(ctx, hX+20, hY-30, hX+20, hY, '#0284c7'); }
+      }
+      else if(currentExerciseId === 'ohp') {
+        const fX = w*0.5, fY = floorY-4; const hipX = fX, hipY = floorY-90; const shX = hipX, shY = hipY-45;
+        drawBone(fX, fY, hipX, hipY, 6); drawBone(hipX, hipY, shX, shY, 8); drawJoint(shX, shY-15, 11, headColor);
+        const hY = shY - 10 - (1-phase)*40; const elbX = shX + 25*(phase); const elbY = shY + 15*phase;
+        
+        // Glow Ombro
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10;
+        drawBone(shX, shY, elbX, elbY, 6, '#10b981');
+        ctx.shadowBlur = 0;
+        drawBone(elbX, elbY, shX, hY, 5, '#94a3b8');
+        
+        ctx.fillStyle='#64748b'; ctx.fillRect(shX-15, hY-15, 30, 15); // Peso
+
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ EMPURRE", w/2, 40); drawArrow(ctx, shX+30, shY, shX+30, hY, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ CONTROLE O PESO", w/2, 40); drawArrow(ctx, shX+30, hY, shX+30, shY, '#0284c7'); }
+      }
+      else if(currentExerciseId === 'bench_dips') {
+        const benchX = w*0.35, benchY = floorY-50;
+        ctx.fillStyle='#94a3b8'; ctx.fillRect(benchX-15, benchY, 30, 50); // Banco
+        const hX = benchX, hY = benchY;
+        const shY = floorY-65 + phase*30, shX = hX-15;
+        const hipX = shX+5, hipY = shY+45; const fX = w*0.65, fY = floorY-4;
+        drawBone(fX, fY, hipX, hipY, 6); drawBone(hipX, hipY, shX, shY, 8); drawJoint(shX-5, shY-15, 11, headColor);
+        const elbX = hX-20*(1-phase), elbY = hY - 15*phase;
+        
+        // Glow Triceps
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10;
+        drawBone(shX, shY, elbX, elbY, 6, '#10b981'); 
+        ctx.shadowBlur = 0;
+        drawBone(elbX, elbY, hX, hY, 5, '#94a3b8');
+
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ FORÇA NO TRÍCEPS", w/2, 40); drawArrow(ctx, shX-20, shY, shX-20, shY-30, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ DESÇA ATÉ 90 GRAUS", w/2, 40); drawArrow(ctx, shX-20, shY-30, shX-20, shY, '#0284c7'); }
+      }
+      else if(currentExerciseId === 'bicep_curl') {
+        const fX = w*0.5, fY = floorY-4; const hipX = fX, hipY = floorY-90; const shX = hipX, shY = hipY-45;
+        drawBone(fX, fY, hipX, hipY, 6); drawBone(hipX, hipY, shX, shY, 8); drawJoint(shX, shY-15, 11, headColor);
+        const elbX = shX+5, elbY = shY+25;
+        const curlAngle = phase * (Math.PI*0.7) + 0.2;
+        const hX = elbX + Math.sin(curlAngle)*25, hY = elbY + Math.cos(curlAngle)*25;
+        
+        drawBone(shX, shY, elbX, elbY, 6, '#94a3b8');
+        // Glow Biceps
+        ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10;
+        drawBone(elbX, elbY, hX, hY, 6, '#10b981');
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle='#64748b'; ctx.beginPath(); ctx.arc(hX, hY, 8, 0, Math.PI*2); ctx.fill(); // Peso
+
+        if(isConcentric) { ctx.fillStyle = '#059669'; ctx.fillText("↑ APERTE O BÍCEPS", w/2, 40); drawArrow(ctx, hX+15, hY, hX+15, hY-20, '#059669'); } 
+        else { ctx.fillStyle = '#0284c7'; ctx.fillText("↓ NÃO SOLTE DE UMA VEZ", w/2, 40); drawArrow(ctx, hX+15, hY-20, hX+15, hY, '#0284c7'); }
+      }
+      else { 
+        drawJoint(w/2, floorY-100, 12, headColor); drawBone(w/2, floorY-90, w/2, floorY-4, 7, '#94a3b8'); 
+        ctx.fillStyle = '#94a3b8'; ctx.fillText("DESCANSO ARTICULAR", w/2, 40);
+      }
+      
+      requestAnimationFrame(renderSimulation);
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('dayTabsContainer');
+      const dias = [
+        {id:'seg', n:'Seg', sub:'Push'}, {id:'ter', n:'Ter', sub:'Pull'}, {id:'qua', n:'Qua', sub:'Descanso'},
+        {id:'qui', n:'Qui', sub:'Legs'}, {id:'sex', n:'Sex', sub:'Upper'}, {id:'sab', n:'Sab', sub:'Livre'}, {id:'dom', n:'Dom', sub:'Prep'}
+      ];
+      container.innerHTML = dias.map(d => `
+        <button class="day-tab px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap uppercase tracking-wider bg-white text-slate-500 border border-slate-200 hover:bg-slate-50" data-day="${d.id}" onclick="selectDay('${d.id}')">
+          ${d.n} (${d.sub})
+        </button>
+      `).join('');
+    }
+
+    function selectDay(dayKey) {
+      currentDayKey = dayKey;
+      document.querySelectorAll('.day-tab').forEach(b => {
+        if(b.getAttribute('data-day') === dayKey) {
+          b.classList.add('tab-active'); b.classList.remove('text-slate-500', 'bg-white');
+        } else {
+          b.classList.remove('tab-active'); b.classList.add('text-slate-500', 'bg-white');
+        }
+      });
+      renderTimeline(currentDayKey);
+    }
+
+    function renderTimeline(dayKey) {
+      const dayData = WEEK_DATA[dayKey];
+      if (!dayData) return;
+
+      document.getElementById('dayBadge').innerText = dayData.badge;
+      document.getElementById('dayTitle').innerText = dayData.title;
+      document.getElementById('dayDevTip').innerText = dayData.devTip;
+
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '';
+      
+      let tasksCompleted = 0;
+      const isToday = (dayKey === ['dom','seg','ter','qua','qui','sex','sab'][new Date().getDay()]);
+
+      dayData.timeline.forEach((item, index) => {
+        const actionId = `${dayKey}-${index}`;
+        const proofKey = `${todayStr}_${actionId}`;
+        const hasProof = dailyProofs[proofKey];
+        
+        if(hasProof && isToday) tasksCompleted++;
+
+        let badgeStyle = 'bg-slate-100 text-slate-700 border-slate-200';
+        if (item.category === 'workout') badgeStyle = 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        else if (item.category === 'cardio') badgeStyle = 'bg-blue-100 text-blue-700 border-blue-200';
+
+        const card = document.createElement('div');
+        card.id = `timeline-card-${actionId}`;
+        let cardClass = `glass-panel p-4 rounded-xl transition-all flex flex-col items-start gap-4 border-l-4 border-l-slate-300`;
+        if (hasProof && isToday) cardClass += ` task-verified`;
+        card.className = cardClass;
+
+        let buttonsHtml = '';
+        if (item.recipe) {
+          buttonsHtml += `<button onclick="openRecipeModal('${dayKey}', ${index})" class="btn-tactical px-3 py-1.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 font-black text-[9px] uppercase tracking-widest border border-blue-200 flex items-center gap-1"><span class="text-xs">📖</span> Protocolo de Preparo</button>`;
+        }
+
+        if (isToday) {
+          if (hasProof) {
+            buttonsHtml += `<div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded border border-emerald-200 text-[9px] font-black text-emerald-700 uppercase tracking-widest"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Executado e Provado</div>`;
+          } else {
+            buttonsHtml += `<button onclick="requestTimelineProof('${actionId}')" class="btn-tactical px-3 py-1.5 rounded bg-white hover:bg-slate-50 text-slate-700 font-black text-[9px] uppercase tracking-widest border border-slate-300 flex items-center gap-1 shadow-sm"><span class="text-xs">📷</span> Executar e Provar</button>`;
+          }
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start gap-4 w-full">
+            <div class="text-3xl pt-1 shrink-0">${item.icon}</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="font-mono text-xs font-black ${hasProof && isToday ? 'text-emerald-600' : 'text-slate-500'}">${item.time}</span>
+                <span class="text-[9px] font-black font-mono px-2 py-0.5 rounded border uppercase ${badgeStyle}">${item.category}</span>
+              </div>
+              <p class="text-sm font-black text-slate-900">${item.title}</p>
+              ${item.targetWeight ? `<div class="my-2 inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-red-50 border border-red-200 rounded text-red-700 shadow-sm"><span class="text-sm">⚖️</span> <span class="text-[10px] font-black font-mono uppercase tracking-widest">Carga Obrigatória: ${item.targetWeight}</span></div>` : ''}
+              <p class="text-[11px] font-medium text-slate-600 leading-relaxed">${item.desc}</p>
+              <div class="mt-3 flex flex-wrap gap-2">${buttonsHtml}</div>
+            </div>
+            ${hasProof && isToday ? `<div class="w-16 h-16 rounded-lg border border-emerald-300 bg-cover bg-center shrink-0 shadow-sm hidden sm:block" style="background-image: url(${hasProof})"></div>` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      document.getElementById('dailyProgressText').innerText = isToday ? `${tasksCompleted}/${dayData.timeline.length} Provas` : 'Modo Leitura';
+
+      const exContainer = document.getElementById('exerciseListContainer');
+      exContainer.innerHTML = '';
+      
+      if(dayData.exercises && dayData.exercises.length > 0) {
+        dayData.exercises.forEach(ex => {
+          const duration = ex.duration ? `<span class="text-[9px] ml-2 text-slate-400">⌚ ${ex.duration} MIN</span>` : '';
+          exContainer.innerHTML += `
+            <div onclick="selectExercise('${ex.id}')" class="ex-card cursor-pointer p-3 rounded-xl border border-slate-200 bg-white hover:border-emerald-400 hover:shadow-sm transition-all relative overflow-hidden group" data-ex="${ex.id}">
+              <div class="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-emerald-400 transition-colors"></div>
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-black text-slate-800 uppercase flex items-center gap-2">
+                  <span class="text-[10px] bg-slate-100 text-slate-500 p-1 rounded font-mono group-hover:bg-emerald-100 group-hover:text-emerald-600">▶</span>
+                  ${ex.name} ${duration}
+                </span>
+                <span class="text-[10px] font-mono font-bold bg-slate-100 px-2 py-1 rounded text-slate-600 group-hover:bg-emerald-100 group-hover:text-emerald-700">${ex.sets}</span>
+              </div>
+            </div>
+          `;
+        });
+        selectExercise(dayData.exercises[0].id);
+      } else {
+        exContainer.innerHTML = `<div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center text-xs font-bold text-slate-500">Nenhum exercício programado. Descanso ativo.</div>`;
+        selectExercise('rest');
+      }
+    }
+
+    function selectExercise(exId) {
+      currentExerciseId = exId; simTime = 0; repCount = 0;
+      document.getElementById('simRepCounter').innerText = '0';
+      
+      // Update Active Card Styling
+      document.querySelectorAll('.ex-card').forEach(card => {
+        if(card.getAttribute('data-ex') === exId) {
+          card.classList.add('ex-card-active');
+        } else {
+          card.classList.remove('ex-card-active');
+        }
+      });
+
+      if(exId === 'rest') {
+        document.getElementById('simExerciseName').innerText = 'Recuperação / Descanso';
+        document.getElementById('simMuscleBadge').innerText = 'SISTÊMICO';
+        document.getElementById('simSetsReps').innerText = '-';
+        document.getElementById('simFormTips').innerHTML = '<li>Beba muita água e mantenha a musculatura relaxada.</li>';
+        return;
+      }
+
+      for (const k in WEEK_DATA) {
+        const found = WEEK_DATA[k].exercises.find(e => e.id === exId);
+        if (found) {
+          document.getElementById('simExerciseName').innerText = found.name;
+          document.getElementById('simMuscleBadge').innerText = found.muscle;
+          document.getElementById('simSetsReps').innerText = found.sets + ' REPS';
+          
+          document.getElementById('simFormTips').innerHTML = found.tips.map(t => `<li>${t}</li>`).join('');
+          break;
+        }
+      }
+    }
+
+    function openRecipeModal(dayKey, index) {
+      const data = WEEK_DATA[dayKey].timeline[index];
+      if(!data || !data.recipe) return;
+      document.getElementById('recipeIcon').innerText = data.icon;
+      document.getElementById('recipeTitle').innerText = data.title;
+      document.getElementById('recipeDesc').innerText = data.desc;
+      const ingsHtml = data.recipe.ingredients.map(ing => `<li class="flex items-start gap-3"><input type="checkbox" class="check-custom shrink-0 mt-0.5"><span class="text-xs font-bold text-slate-700">${ing}</span></li>`).join('');
+      document.getElementById('recipeIngredients').innerHTML = ingsHtml;
+      document.getElementById('recipePrep').innerText = data.recipe.prep;
+      const m = document.getElementById('recipeModal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+      setTimeout(() => m.classList.remove('opacity-0'), 10);
+    }
+    function closeRecipeModal() {
+      const m = document.getElementById('recipeModal');
+      m.classList.add('opacity-0');
+      setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+    }
+
+    const fileInputTimeline = document.getElementById('timelinePhotoInput');
+    function requestTimelineProof(actionId) {
+      pendingTimelineActionId = actionId;
+      fileInputTimeline.click();
+    }
+    fileInputTimeline.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file || !pendingTimelineActionId) return;
+      compressImage(file, (base64Img) => {
+        try {
+          const proofKey = `${todayStr}_${pendingTimelineActionId}`;
+          dailyProofs[proofKey] = base64Img;
+          localStorage.setItem('titanDailyProofs', JSON.stringify(dailyProofs));
+          playBeep(1000, 'sine', 0.1); setTimeout(() => playBeep(1200, 'sine', 0.2), 150);
+          showToast('Auditoria Aceita', 'Sua prova foi registrada no sistema.', '✅');
+          
+          createNotificationRecord('success', 'PROVA CADASTRADA', 'Evidência validada. Protocolo cumprido dentro da janela metabólica.');
+
+          renderTimeline(currentDayKey); 
+        } catch (error) {
+          showToast('Erro de Memória', 'Armazenamento cheio. Limpe dados antigos.', '⚠️', true);
+        }
+        pendingTimelineActionId = null;
+      });
+    });
+
+    function toggleGroceryModal() {
+      const m = document.getElementById('groceryModal');
+      if (m.classList.contains('hidden')) {
+        m.classList.remove('hidden'); m.classList.add('flex');
+        setTimeout(() => m.classList.remove('opacity-0'), 10);
+        renderGroceryList();
+      } else {
+        m.classList.add('opacity-0');
+        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+      }
+    }
+
+    function renderGroceryList() {
+      const container = document.getElementById('groceryContainer');
+      container.innerHTML = '';
+      const sections = [
+        { key: 'carbs', title: '🌾 Carbos (Lenta Absorção)', color: 'text-amber-600', border: 'border-amber-200', bg: 'bg-amber-50/50' },
+        { key: 'proteins', title: '🥩 Proteínas (Reconstrução)', color: 'text-red-600', border: 'border-red-200', bg: 'bg-red-50/50' },
+        { key: 'fats', title: '🥜 Gorduras (Densidade)', color: 'text-blue-600', border: 'border-blue-200', bg: 'bg-blue-50/50' }
+      ];
+      sections.forEach(sec => {
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-xl ${sec.bg} border ${sec.border}`;
+        let itemsHtml = groceryData[sec.key].map((item, idx) => `
+          <div class="p-2 hover:bg-white rounded transition flex flex-col gap-1 border border-transparent hover:border-slate-200 hover:shadow-sm">
+            <label class="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" class="check-custom" ${item.checked ? 'checked' : ''} onchange="updateGrocery('${sec.key}', ${idx}, this.checked)">
+              <span class="text-xs font-bold ${item.checked ? 'text-slate-400 line-through' : 'text-slate-700'}">${item.name}</span>
+            </label>
+            ${!item.checked ? `<span class="text-[9px] font-mono text-slate-500 pl-8 flex items-center gap-1">↳ <span class="text-amber-600">Substituto: ${item.sub}</span></span>` : ''}
+          </div>
+        `).join('');
+        div.innerHTML = `<h4 class="text-[11px] font-black ${sec.color} uppercase tracking-widest mb-3 border-b border-slate-200 pb-2">${sec.title}</h4><div class="space-y-1">${itemsHtml}</div>`;
+        container.appendChild(div);
+      });
+    }
+
+    window.updateGrocery = function(category, index, isChecked) {
+      groceryData[category][index].checked = isChecked;
+      localStorage.setItem('titanGrocery', JSON.stringify(groceryData));
+      renderGroceryList();
+      if(isChecked) playBeep(900, 'sine', 0.05);
+    }
+
+    let tempClinicPhotos = { balanca: null, shape: null };
+    function toggleClinicModal() {
+      const m = document.getElementById('clinicModal');
+      if (m.classList.contains('hidden')) {
+        m.classList.remove('hidden'); m.classList.add('flex');
+        setTimeout(() => m.classList.remove('opacity-0'), 10);
+        renderClinicChart();
+        tempClinicPhotos = { balanca: null, shape: null };
+        document.getElementById('newWeightInput').value = '';
+        document.getElementById('previewBalanca').style.backgroundImage = '';
+        document.getElementById('previewBalanca').innerHTML = '<span class="text-xl mb-1">⚖️</span><span class="text-[9px] font-bold uppercase text-slate-600">Anexar</span>';
+        document.getElementById('previewShape').style.backgroundImage = '';
+        document.getElementById('previewShape').innerHTML = '<span class="text-xl mb-1">🧍‍♂️</span><span class="text-[9px] font-bold uppercase text-slate-600">Anexar</span>';
+        document.getElementById('aiLaudoBox').classList.add('hidden');
+        checkClinicForm();
+      } else {
+        m.classList.add('opacity-0');
+        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+      }
+    }
+
+    function handleClinicPhoto(inputEl, previewId) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      compressImage(file, (base64Img) => {
+        const prev = document.getElementById(previewId);
+        prev.style.backgroundImage = `url(${base64Img})`;
+        prev.innerHTML = '';
+        if (previewId.includes('Balanca')) tempClinicPhotos.balanca = base64Img;
+        if (previewId.includes('Shape')) tempClinicPhotos.shape = base64Img;
+        checkClinicForm();
+      });
+    }
+
+    function checkClinicForm() {
+      const w = parseFloat(document.getElementById('newWeightInput').value);
+      const btn = document.getElementById('btnSalvarClinica');
+      if (w > 40 && tempClinicPhotos.balanca && tempClinicPhotos.shape) {
+        btn.disabled = false;
+        btn.className = 'btn-tactical w-full py-3.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-black text-xs uppercase tracking-widest transition-all shadow-neon-purple';
+        btn.innerText = 'CADASTRAR AUDITORIA MÉDICA';
+      } else {
+        btn.disabled = true;
+        btn.className = 'w-full py-3.5 rounded-xl bg-slate-100 text-slate-400 font-black text-xs uppercase tracking-widest transition-all cursor-not-allowed border border-slate-200';
+        btn.innerText = 'FALTAM EVIDÊNCIAS (FOTOS)';
+      }
+    }
+
+    function submitClinicEval() {
+      try {
+        const newW = parseFloat(document.getElementById('newWeightInput').value);
+        const lastRecord = weightHistory[weightHistory.length - 1];
+        const diff = parseFloat((newW - lastRecord.weight).toFixed(2));
+        const newRecord = { id: Date.now(), weight: newW, diff: diff, date: new Date().toLocaleDateString('pt-BR'), scalePhoto: tempClinicPhotos.balanca, bodyPhoto: tempClinicPhotos.shape };
+        weightHistory.push(newRecord);
+        localStorage.setItem('titanWeightsExtremo', JSON.stringify(weightHistory));
+        renderClinicChart(); generateAiLaudo(diff); updateGlobalProgress();
+        playBeep(523, 'sine', 0.1); setTimeout(() => playBeep(659, 'sine', 0.2), 100);
+        document.getElementById('btnSalvarClinica').style.display = 'none';
+        tempClinicPhotos = { balanca: null, shape: null };
+      } catch (error) {
+        weightHistory.pop(); showToast('Erro Crítico', 'Memória do navegador cheia.', '🚨', true);
+      }
+    }
+
+    function generateAiLaudo(diff) {
+      const box = document.getElementById('aiLaudoBox');
+      const title = document.getElementById('laudoTitle');
+      const text = document.getElementById('laudoText');
+      const icon = document.getElementById('laudoIcon');
+      
+      box.classList.remove('hidden', 'border-emerald-500', 'border-amber-500', 'border-red-500');
+      box.classList.add('flex');
+      
+      if (diff >= 4.5) {
+        box.classList.add('border-emerald-500'); icon.innerText = '✅';
+        title.innerText = 'PROJETO 110KG: META EXTREMA ATINGIDA'; title.className = 'text-[10px] font-black uppercase tracking-widest text-emerald-600';
+        text.innerHTML = `Ganho massivo de <b>+${diff}kg</b>. Superávit agressivo rodando perfeito para o prazo de 3 meses.`;
+      } else if (diff > 0 && diff < 4.5) {
+        box.classList.add('border-amber-500'); icon.innerText = '⚠️';
+        title.innerText = 'ALERTA: METABOLISMO ACELERADO DEMAIS'; title.className = 'text-[10px] font-black uppercase tracking-widest text-amber-600';
+        text.innerHTML = `Ganho de apenas <b>+${diff}kg</b>. Para bater 110kg em 3 meses, você precisa de +4.8kg/semana. Dobre a quantidade de carboidratos imediatamente.`;
+      } else {
+        box.classList.add('border-red-500'); icon.innerText = '🚨';
+        title.innerText = 'EMERGÊNCIA CATABÓLICA SEVERA'; title.className = 'text-[10px] font-black uppercase tracking-widest text-red-500';
+        text.innerHTML = `Variação de <b>${diff}kg</b>. Você está perdendo massa ou estagnado. Meta de 110kg em risco máximo! Corte os aeróbicos e adicione +1000kcal hoje.`;
+      }
+    }
+
+    function renderClinicChart() {
+      const container = document.getElementById('weightChartContainer');
+      container.innerHTML = '';
+      const displayData = weightHistory.slice(-6);
+      
+      const currentW = weightHistory[weightHistory.length - 1].weight;
+      const minW = Math.max(0, currentW - 5); 
+      const maxW = Math.max(currentW + 10, 60); 
+      
+      displayData.forEach((rec, idx) => {
+        let pct = ((rec.weight - minW) / (maxW - minW)) * 100;
+        let color = 'bg-slate-700';
+        if (idx > 0) {
+          if (rec.diff >= 4.5) color = 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]';
+          else if (rec.diff > 0) color = 'bg-amber-500';
+          else if (rec.diff <= 0) color = 'bg-red-500';
+        } else { color = 'bg-fuchsia-500'; }
+
+        const bar = document.createElement('div');
+        bar.className = 'flex flex-col items-center gap-1.5 w-12 group relative';
+        bar.innerHTML = `
+          <div class="absolute -top-8 bg-slate-800 border border-slate-700 rounded px-1.5 py-0.5 text-[9px] font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap shadow-lg">${rec.date}</div>
+          <span class="text-[9px] font-black font-mono text-slate-500">${rec.weight}</span>
+          <div class="w-full bg-slate-200 rounded-t-sm relative flex items-end h-full">
+             <div class="w-full ${color} rounded-t-sm transition-all duration-1000" style="height: ${Math.max(5, pct)}%"></div>
+          </div>
+        `;
+        container.appendChild(bar);
+      });
+    }
+
+    function toggleMemorialModal() {
+      const m = document.getElementById('memorialModal');
+      if (m.classList.contains('hidden')) {
+        m.classList.remove('hidden'); m.classList.add('flex');
+        setTimeout(() => m.classList.remove('opacity-0'), 10);
+        renderMemorial();
+      } else {
+        m.classList.add('opacity-0');
+        setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 300);
+      }
+    }
+
+    function renderMemorial() {
+      const container = document.getElementById('memorialGallery');
+      container.innerHTML = '';
+      const validRecords = weightHistory.filter(w => w.bodyPhoto && w.scalePhoto);
+      if (validRecords.length === 0) {
+        container.innerHTML = `<p class="col-span-full text-center text-xs text-slate-500 font-mono mt-10">O memorial está vazio. Submeta fotos no Centro Clínico.</p>`;
+        return;
+      }
+      validRecords.reverse().forEach(rec => {
+        const card = document.createElement('div');
+        card.className = 'bg-white border border-amber-200 rounded-xl overflow-hidden p-4 shadow-sm hover:shadow-md transition-shadow';
+        card.innerHTML = `
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-[10px] font-mono text-slate-600 font-bold bg-slate-100 px-2 py-1 rounded">${rec.date}</span>
+            <span class="text-sm font-black text-amber-600">${rec.weight.toFixed(1)} KG <span class="text-[9px] text-slate-400 ml-1">(${rec.diff > 0 ? '+'+rec.diff : rec.diff})</span></span>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <span class="text-[8px] uppercase font-bold text-slate-500 block mb-1.5 tracking-widest text-center">Físico</span>
+              <div class="w-full aspect-[3/4] bg-slate-100 rounded-lg bg-cover bg-center border border-slate-200" style="background-image:url(${rec.bodyPhoto})"></div>
+            </div>
+            <div>
+              <span class="text-[8px] uppercase font-bold text-slate-500 block mb-1.5 tracking-widest text-center">Balança</span>
+              <div class="w-full aspect-[3/4] bg-slate-100 rounded-lg bg-cover bg-center border border-slate-200" style="background-image:url(${rec.scalePhoto})"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function updateGlobalProgress() {
+      const current = weightHistory[weightHistory.length - 1].weight;
+      let pct = ((current - 52.0) / (110.0 - 52.0)) * 100;
+      if (pct < 0) pct = 0; if (pct > 100) pct = 100;
+      document.getElementById('globalProgressText').innerText = `${current.toFixed(1)} KG`;
+      setTimeout(() => { document.getElementById('globalProgressBar').style.width = `${pct}%`; }, 300);
+    }
+
+    let lastNotifiedTime = null;
+    let lastStockAlertDay = null;
+
+    function checkLiveEvents() {
+      const now = new Date();
+      document.getElementById('currentSystemClock').innerText = now.toLocaleTimeString('pt-BR');
+      const currentDecTime = now.getHours() + (now.getMinutes()/60);
+      const today = ['dom','seg','ter','qua','qui','sex','sab'][now.getDay()];
+      if(currentDayKey !== today) return; 
+
+      const dayData = WEEK_DATA[today];
+      let foundEvent = false;
+      let isWorkoutActive = false;
+
+      document.querySelectorAll('[id^="timeline-card-"]').forEach(c => c.classList.remove('status-live'));
+
+      dayData.timeline.forEach((item, index) => {
+        const timeParts = item.time.split(' - ')[0].split(':');
+        const eventHour = parseInt(timeParts[0]);
+        const eventMin = parseInt(timeParts[1]);
+        const eventDecTime = eventHour + (eventMin/60);
+        const eventTotalMins = eventHour * 60 + eventMin;
+        const nowTotalMins = now.getHours() * 60 + now.getMinutes();
+        
+        const actionId = `${today}-${index}`;
+        const proofKey = `${todayStr}_${actionId}`;
+        const hasProof = !!dailyProofs[proofKey];
+        
+        if (!hasProof && nowTotalMins >= (eventTotalMins + 20)) {
+           const penaltyKey = `penalty_${proofKey}`;
+           if (!processedAlerts[penaltyKey]) {
+             // Usuário estourou o tempo de 20 minutos sem mandar prova
+             let penaltyTitle = 'FALHA DE PROTOCOLO';
+             let penaltyMsg = `Você perdeu a tarefa das ${item.time}.`;
+             
+             if(item.category === 'meal') {
+               penaltyTitle = 'FALHA ANABÓLICA SEVERA 🚨';
+               penaltyMsg = `Atraso crítico na refeição das ${item.time}. Seu corpo não encontrou nutrientes e iniciou a quebra de fibras musculares para gerar energia. Ganho de peso comprometido hoje.`;
+             } else if (item.category === 'workout') {
+               penaltyTitle = 'JANELA DE HIPERTROFIA PERDIDA 📉';
+               penaltyMsg = `Atraso no treino das ${item.time}. Sem estímulo biomecânico, as calorias do dia virarão gordura ao invés de músculo denso.`;
+             }
+
+             createNotificationRecord('penalty', penaltyTitle, penaltyMsg);
+             pushSystemNotification(penaltyTitle, penaltyMsg, '🚨');
+             showToast(penaltyTitle, penaltyMsg, "🚨", true);
+             playBeep(200, 'sawtooth', 0.5); setTimeout(()=>playBeep(150, 'sawtooth', 0.8), 600); // Som assustador
+             
+             processedAlerts[penaltyKey] = true;
+             localStorage.setItem('titanProcessedAlerts', JSON.stringify(processedAlerts));
+           }
+        }
+
+        const warnKey = `warn_${todayStr}_${actionId}`;
+        const nowKey = `now_${todayStr}_${actionId}`;
+
+        // Routing Engine para o Holo-Engine
+        if (item.category === 'workout' && item.time.includes(' - ')) {
+            const [start, end] = item.time.split(' - ');
+            const [sH, sM] = start.split(':').map(Number);
+            const [eH, eM] = end.split(':').map(Number);
+            const startTotal = sH * 60 + sM;
+            const endTotal = eH * 60 + eM;
+            const nowTotal = now.getHours() * 60 + now.getMinutes();
+
+            if (nowTotal >= startTotal && nowTotal < endTotal) {
+                isWorkoutActive = true;
+                const elapsed = nowTotal - startTotal;
+                let acc = 0;
+                let currentEx = null;
+                let minsLeft = 0;
+
+                for(let i=0; i<dayData.exercises.length; i++) {
+                    const ex = dayData.exercises[i];
+                    const dur = ex.duration || (60/dayData.exercises.length);
+                    if(elapsed >= acc && elapsed < acc + dur) {
+                        currentEx = ex;
+                        minsLeft = (acc + dur) - elapsed - 1;
+                        break;
+                    }
+                    acc += dur;
+                }
+
+                const badge = document.getElementById('liveWorkoutBadge');
+                if (currentEx) {
+                    if(badge) {
+                        badge.classList.remove('hidden');
+                        badge.classList.add('flex');
+                        document.getElementById('liveExerciseTimer').innerText = `${minsLeft.toString().padStart(2, '0')}:${(59 - now.getSeconds()).toString().padStart(2, '0')}`;
+                    }
+                    
+                    // Sistema sequestra o controle e foca no exercício atual (Auto-Switch)
+                    if (currentExerciseId !== currentEx.id) {
+                        selectExercise(currentEx.id);
+                        showToast('MUDANÇA DE ESTAÇÃO', `Inicie agora: ${currentEx.name}`, '🔄', true);
+                        playBeep(1000, 'square', 0.2); setTimeout(()=>playBeep(1200, 'square', 0.3), 200);
+                    }
+                }
+            }
+        }
+
+        if (eventDecTime > currentDecTime && (eventDecTime - currentDecTime) <= (10/60)) {
+           document.getElementById('currentPhaseTitle').innerText = `PREPARAÇÃO: ${item.title}`;
+           document.getElementById('currentPhaseTip').innerText = `Faltam minutos. ${item.desc}`;
+           
+           if (!processedAlerts[warnKey]) {
+             showToast("PREPARE-SE", `Faltam 10 min para: ${item.title}`, "⏳", false);
+             pushSystemNotification("Prepare-se", `Sua tarefa "${item.title}" começa em breve.`, "⏳");
+             createNotificationRecord('alert', 'PREPARAÇÃO', `Tarefa iminente: ${item.title}`);
+             playBeep(700, 'sine', 0.1);
+             processedAlerts[warnKey] = true;
+             localStorage.setItem('titanProcessedAlerts', JSON.stringify(processedAlerts));
+           }
+           foundEvent = true;
+        } 
+        else if (currentDecTime >= eventDecTime && currentDecTime < (eventDecTime + 0.33)) { // 0.33 dec = 20 mins
+           document.getElementById('currentPhaseTitle').innerText = `EXECUÇÃO: ${item.title}`;
+           
+           if (!hasProof) {
+             document.getElementById('currentPhaseTip').innerText = `CRÍTICO: Você tem ${20 - (nowTotalMins - eventTotalMins)} minutos para enviar a prova fotográfica!`;
+             document.getElementById('currentPhaseTip').className = "text-xs font-black text-red-600 mt-1 animate-pulse";
+           } else {
+             document.getElementById('currentPhaseTip').innerText = `Tarefa validada. Aguardando próximo bloco.`;
+             document.getElementById('currentPhaseTip').className = "text-xs text-emerald-600 mt-1 font-medium";
+           }
+
+           const cardEl = document.getElementById(`timeline-card-${today}-${index}`);
+           if(cardEl && !cardEl.classList.contains('task-verified')) cardEl.classList.add('status-live');
+           
+           if (!processedAlerts[nowKey] && !hasProof) {
+             showToast("AGORA!", `Tire a foto de prova para: ${item.title}. Você tem 20 minutos.`, "🚨", true);
+             pushSystemNotification("AÇÃO REQUERIDA!", `Hora de executar: ${item.title}. Tire a foto em até 20 minutos.`, "🔥");
+             createNotificationRecord('alert', 'EXECUÇÃO INICIADA', `Correndo prazo de 20 minutos para provar: ${item.title}`);
+             playBeep(900, 'square', 0.1); setTimeout(()=>playBeep(1100, 'square', 0.2), 150);
+             processedAlerts[nowKey] = true;
+             localStorage.setItem('titanProcessedAlerts', JSON.stringify(processedAlerts));
+           }
+           foundEvent = true;
+        }
+      });
+
+      if (!foundEvent) {
+        const tipIndex = Math.floor(now.getTime() / 15000) % AI_TIPS.length;
+        document.getElementById('currentPhaseTitle').innerText = '🤖 IA TÁTICA: MODO SUPERVISÃO';
+        document.getElementById('currentPhaseTip').innerText = AI_TIPS[tipIndex];
+        document.getElementById('currentPhaseTitle').className = 'font-black text-blue-600 text-sm md:text-base uppercase tracking-tight';
+      } else {
+        document.getElementById('currentPhaseTitle').className = 'font-black text-slate-900 text-sm md:text-base uppercase tracking-tight';
+      }
+
+      // Esconde o painel do Holo-Engine se o treino não estiver ativo
+      if(!isWorkoutActive) {
+          const badge = document.getElementById('liveWorkoutBadge');
+          if(badge) {
+              badge.classList.add('hidden');
+              badge.classList.remove('flex');
+          }
+      }
+
+      const currentDayString = now.toLocaleDateString();
+      if (lastStockAlertDay !== currentDayString) {
+        let missingCount = 0; let missingCritico = null;
+        ['carbs', 'proteins', 'fats'].forEach(cat => {
+            groceryData[cat].forEach(item => { if(!item.checked) { missingCount++; if(!missingCritico) missingCritico = item; } });
+        });
+        if (missingCount > 0) {
+            const weekDayIndex = now.getDay();
+            if (weekDayIndex === 5 || weekDayIndex === 6) {
+                showToast("FALHA LOGÍSTICA", `Faltam ${missingCount} itens de dieta! Ex: Use o substituto: ${missingCritico.sub}!`, "🚨", true);
+                playBeep(900, 'square', 0.1); setTimeout(() => playBeep(900, 'square', 0.2), 200);
+                lastStockAlertDay = currentDayString;
+            } else if (weekDayIndex === 3) {
+                showToast("ESTOQUE BAIXO", `Faltam ${missingCount} alimentos na despensa.`, "🛒", false);
+                lastStockAlertDay = currentDayString;
+            }
+        }
+      }
+    }
+
+    const startRestBtn = document.getElementById('startRestBtn');
+    document.querySelectorAll('.rest-preset-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        clearInterval(restTimerInterval); restTimerInterval = null;
+        startRestBtn.innerText = 'INICIAR';
+        restSecondsLeft = parseInt(b.getAttribute('data-seconds'));
+        const m = Math.floor(restSecondsLeft/60).toString().padStart(2,'0');
+        const s = (restSecondsLeft%60).toString().padStart(2,'0');
+        document.getElementById('restTimerDisplay').innerText = `${m}:${s}`;
+      });
+    });
+    
+    startRestBtn.addEventListener('click', () => {
+      if(restTimerInterval) {
+        clearInterval(restTimerInterval); restTimerInterval = null;
+        startRestBtn.innerText = 'CONTINUAR';
+      } else {
+        startRestBtn.innerText = 'PAUSAR';
+        playBeep(440, 'triangle', 0.1);
+        restTimerInterval = setInterval(() => {
+          restSecondsLeft--;
+          if (restSecondsLeft <= 0) {
+            clearInterval(restTimerInterval); restTimerInterval = null;
+            restSecondsLeft = 60; document.getElementById('restTimerDisplay').innerText = '00:00';
+            startRestBtn.innerText = 'INICIAR';
+            playBeep(880, 'square', 0.2); setTimeout(()=>playBeep(1200, 'square', 0.3), 200);
+            showToast('Foco!', 'Descanso encerrado. Volte ao treino.', '⏰', true);
+          } else {
+            const m = Math.floor(restSecondsLeft/60).toString().padStart(2,'0');
+            const s = (restSecondsLeft%60).toString().padStart(2,'0');
+            document.getElementById('restTimerDisplay').innerText = `${m}:${s}`;
+            if (restSecondsLeft <= 3) playBeep(600, 'sine', 0.1);
+          }
+        }, 1000);
+      }
+    });
+
+    document.body.addEventListener('click', () => getAudioContext(), {once:true});
+
+    function init() {
+      setupCanvasDPI();
+      renderTabs();
+      updateNotificationBadge();
+      
+      // Auto checar permissão e atualizar o botão do modal
+      if ("Notification" in window && Notification.permission === "granted") {
+         const btn = document.getElementById('btnEnableNotifications');
+         if(btn) {
+           btn.className = 'btn-tactical w-full py-2.5 rounded-lg bg-emerald-50 text-emerald-700 font-black text-[10px] uppercase tracking-widest border border-emerald-200 flex items-center justify-center gap-2';
+           btn.innerHTML = '✅ Notificações Ativadas no Sistema';
+         }
+      }
+
+      const today = ['dom','seg','ter','qua','qui','sex','sab'][new Date().getDay()];
+      selectDay(today);
+      renderSimulation();
+      updateGlobalProgress();
+      setInterval(checkLiveEvents, 1000);
+      checkLiveEvents();
+    }
+    
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  </script>
+</body>
+</html>
