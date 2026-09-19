@@ -7,7 +7,7 @@
   
   <!-- PWA Manifest for Native Install -->
   <link rel="manifest" href='data:application/manifest+json;utf8,{"name":"TitanGain OS","short_name":"TitanGain","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#10b981","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2964/2964514.png","sizes":"512x512","type":"image/png"}]}'>
-  
+    <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,26 +87,12 @@
 
 <body class="min-h-screen flex flex-col pb-20">
 
-  <!-- Service Worker Registration for Native Push Notifications -->
+  <!-- Service Worker Registration for Native Notifications -->
   <script>
     if ('serviceWorker' in navigator) {
-      const swCode = `
-        self.addEventListener('install', (e) => self.skipWaiting());
-        self.addEventListener('activate', (e) => self.clients.claim());
-        self.addEventListener('push', (e) => {
-           const data = e.data ? e.data.json() : {title: 'Titan OS', body: 'Alerta'};
-           self.registration.showNotification(data.title, {
-             body: data.body, 
-             icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png',
-             vibrate: [200, 100, 200, 100, 200, 100, 200],
-             requireInteraction: true
-           });
-        });
-      `;
-      const blob = new Blob([swCode], {type: 'application/javascript'});
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).then(reg => {
+      navigator.serviceWorker.register('./service-worker.js').then(reg => {
         window.swRegistration = reg;
-      });
+      }).catch(error => console.error('Falha ao registrar notificações:', error));
     }
   </script>
 
@@ -710,26 +696,26 @@
       } catch (e) {}
     }
 
+    const notificationIcon = 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png';
+
     let toastTimeout = null;
     function showToast(title, msg, icon = '🔔', type = 'info') {
       const db = DUAL_DATABASE[currentProfile];
-      if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
-         if(window.swRegistration) {
-           window.swRegistration.showNotification(`[${db.name}] ${title}`, { body: msg, icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png', vibrate: [200,100,200] });
-         }
-      }
+      if ("Notification" in window && Notification.permission === "granted" && document.hidden) sendNativeNotification(`[${db.name}] ${title}`, msg, icon);
+    }
+
+    function sendNativeNotification(title, body, icon = '🔔') {
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+      const options = { body, icon: notificationIcon, badge: notificationIcon, tag: `titan-${Date.now()}`, vibrate: [300, 100, 300], requireInteraction: true, data: { url: location.href } };
+      if (window.swRegistration) window.swRegistration.showNotification(title, options);
+      else new Notification(title, options);
     }
 
     function pushSystemNotification(title, body, iconStr, type) {
        const profileName = DUAL_DATABASE[currentProfile].name;
        const fullTitle = `[${profileName}] ${title}`;
        createNotificationRecord(type, fullTitle, body);
-       
-       if ("Notification" in window && Notification.permission === "granted") {
-          if(window.swRegistration) {
-            window.swRegistration.showNotification(fullTitle, { body: body, icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png', vibrate: [300, 100, 300] });
-          }
-       }
+       sendNativeNotification(fullTitle, body, iconStr);
     }
 
     function requestSystemNotifications() {
@@ -738,7 +724,7 @@
         if (permission === "granted") {
           document.getElementById('btnEnableNotifications').innerHTML = '✅ Notificações Ativadas';
           document.getElementById('btnEnableNotifications').className = 'btn-tactical w-full py-3 rounded-xl bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-widest border border-emerald-200 flex items-center justify-center gap-2 shadow-sm';
-          if(window.swRegistration) window.swRegistration.showNotification("Titan OS", {body: "Pronto para enviar alertas no seu celular!", vibrate:[200,100,200]});
+          sendNativeNotification("Titan OS", "Pronto para enviar alertas no seu celular!", "✅");
         } else { alert("Permissão negada. Ative nas configurações do navegador."); }
       });
     }
