@@ -6,8 +6,7 @@
   <title>TitanGain OS | Dual-Core</title>
   
   <!-- PWA Manifest for Native Install -->
-  <link rel="manifest" href='data:application/manifest+json;utf8,{"name":"TitanGain OS","short_name":"TitanGain","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#10b981","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/2964/2964514.png","sizes":"512x512","type":"image/png"}]}'>
-    <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +93,55 @@
         window.swRegistration = reg;
       }).catch(error => console.error('Falha ao registrar notificações:', error));
     }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+    import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+    import { getFirestore, doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+    import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyC56zt9xGfusTYmp1XtEGneig1uhf9ZR7Q',
+      authDomain: 'farmtell-beef-analytics.firebaseapp.com',
+      projectId: 'farmtell-beef-analytics',
+      storageBucket: 'farmtell-beef-analytics.firebasestorage.app',
+      messagingSenderId: '686184908638',
+      appId: '1:686184908638:web:99b39d498a5f8d38c8b1cf',
+      measurementId: 'G-HF61K0VQP3'
+    };
+
+    // Informe aqui a chave publica Web Push do Firebase Cloud Messaging.
+    const firebaseVapidKey = 'BJ8Hz2V8P-be5WhRuzPaa-HE2iRlrl7ExlKX73zTL2O02V1u5BrYldxV40n3yFHIIni8truFveMHq2vpvfKAtro';
+    const firebaseApp = initializeApp(firebaseConfig);
+    const firebaseAuth = getAuth(firebaseApp);
+    const firebaseDb = getFirestore(firebaseApp);
+    const firebaseMessaging = getMessaging(firebaseApp);
+
+    onMessage(firebaseMessaging, payload => {
+      const notification = payload.notification || payload.data || {};
+      if (typeof window.createNotificationRecord === 'function') {
+        window.createNotificationRecord('info', notification.title || 'Titan OS', notification.body || 'Novo alerta');
+      }
+    });
+
+    window.registerFirebasePush = async function () {
+      if (!firebaseVapidKey) throw new Error('Configure a chave VAPID publica do Firebase no index.html.');
+      const registration = window.swRegistration || await navigator.serviceWorker.ready;
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') throw new Error('Permissao de notificacoes nao concedida.');
+      const userCredential = await signInAnonymously(firebaseAuth);
+      const token = await getToken(firebaseMessaging, { vapidKey: firebaseVapidKey, serviceWorkerRegistration: registration });
+      if (!token) throw new Error('O Firebase nao retornou um token FCM.');
+      await setDoc(doc(firebaseDb, 'pushSubscriptions', token), {
+        token,
+        uid: userCredential.user.uid,
+        profile: localStorage.getItem('titanActiveProfile') || 'ian',
+        origin: location.origin,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      return token;
+    };
   </script>
 
   <!-- HEADER DUAL-CORE -->
@@ -718,15 +766,17 @@
        sendNativeNotification(fullTitle, body, iconStr);
     }
 
-    function requestSystemNotifications() {
+    async function requestSystemNotifications() {
       if (!("Notification" in window)) { alert("Seu navegador não suporta notificações nativas."); return; }
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
+      try {
+        await window.registerFirebasePush();
           document.getElementById('btnEnableNotifications').innerHTML = '✅ Notificações Ativadas';
           document.getElementById('btnEnableNotifications').className = 'btn-tactical w-full py-3 rounded-xl bg-emerald-50 text-emerald-700 font-black text-xs uppercase tracking-widest border border-emerald-200 flex items-center justify-center gap-2 shadow-sm';
           sendNativeNotification("Titan OS", "Pronto para enviar alertas no seu celular!", "✅");
-        } else { alert("Permissão negada. Ative nas configurações do navegador."); }
-      });
+      } catch (error) {
+        console.error('Falha ao ativar notificações Firebase:', error);
+        alert(error.message || 'Não foi possível ativar as notificações.');
+      }
     }
 
     function createNotificationRecord(type, title, message) {
